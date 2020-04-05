@@ -58,7 +58,11 @@ public class Controller {
         ProcessBuilder builder = new ProcessBuilder();
         //builder.command("cmd.exe", "/c", a);
         //builder.command("cmd.exe", "/c", "cd"+Location+" && dir & java out.java"); // executing commands of gcc
-        builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ -o program out.cpp & .\\program"+attachedCode); // executing commands of gcc
+        final String os = System.getProperty("os.name").toLowerCase();
+        if(os.indexOf("win") >= 0)
+        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ -o program out.cpp & .\\program"+attachedCode); // executing commands of gcc
+        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
+        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ -o program out.cpp & ./a.out");
         builder.redirectErrorStream(true);
         try {
             Process p = builder.start();
@@ -87,6 +91,7 @@ public class Controller {
 
 
         } catch (Exception e1) {
+        	
             e1.printStackTrace();
         }
     }
