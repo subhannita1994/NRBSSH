@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 //import java.awt.*;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -14,23 +15,62 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.HashMap;
 
 
 public class Controller {
 
-    @FXML TextArea opText;
+    
+	@FXML TextArea opText;
     @FXML TextArea ipText;
     @FXML TextField DebugText;
+    private HashMap<String,String> devOptions = new HashMap<String,String>();
+    
+    
+
+	/**
+	 * 
+	 */
+	public Controller() {
+		devOptions.put("dollar", "-fno-dollars-in-identifiers");
+		devOptions.put("verbose", "-v");
+		devOptions.put("warning", "-Wall");
+		
+	}
 
     @FXML
     private void runCMD(ActionEvent event) throws IOException {
         event.consume();
-        System.out.println("Hello, World!");
+        System.out.println("Running(Normal configuration)...");
          String a= opText.getText();
         System.out.println(a);
         _runCode(a,"");
 
     }
+    
+    @FXML
+    private void runDev(ActionEvent event) throws IOException {
+        event.consume();
+        System.out.println("Running(Developer option)...");
+         String a= opText.getText();
+        System.out.println(a);
+        String data = ((MenuItem)event.getSource()).getId();
+        String devOption = this.devOptions.get(data);
+        if(devOption==null) {
+        	System.out.println("No developer option exists for this alias");
+        	devOption = "";
+        }
+        _runCode(a,devOption);
+
+    }
+    
+    public HashMap<String, String> getDevOptions() {
+		return devOptions;
+	}
+
+	public void setDevOptions(String key, String value) {
+		this.devOptions.put(key, value);
+	}
 
     private String _getPath()
     {
@@ -60,9 +100,9 @@ public class Controller {
         //builder.command("cmd.exe", "/c", "cd"+Location+" && dir & java out.java"); // executing commands of gcc
         final String os = System.getProperty("os.name").toLowerCase();
         if(os.indexOf("win") >= 0)
-        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ -o program out.cpp & .\\program"+attachedCode); // executing commands of gcc
+        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
         else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
-        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ -o program out.cpp & ./a.out");
+        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
         builder.redirectErrorStream(true);
         try {
             Process p = builder.start();
@@ -79,9 +119,13 @@ public class Controller {
                 res= res+"\n"+ line;
 
             }
-            if(!res.contains("error"))
+            if(!res.contains(" error"))
             {
                 ipText.setStyle("-fx-text-inner-color: green;");
+                ipText.setText(res);
+            }
+            else if(!res.contains(" warning")) {
+            	ipText.setStyle("-fx-text-inner-color: pink;");
                 ipText.setText(res);
             }
             else{

@@ -61,7 +61,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Developer Options">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" onAction = "#runDev" id="dollar" text="Disallow $ in identifiers" />
+                        <MenuItem mnemonicParsing="false" onAction = "#runDev" id="warning" text="Show all warnings" />
+                        <MenuItem mnemonicParsing="false" onAction = "#runDev" id="verbose" text="Run verbose" />
                     </items>
                 </Menu>
             </menus>
