@@ -8,7 +8,7 @@ private:
 int main() 
 { 
     Test* t;
-    int avar = 20;
-    std::cout<<avar;
+    int a$var = 20;
+    std::cout<<a$var;
     return 0;
 }

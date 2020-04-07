@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 //import java.awt.*;
 import javafx.fxml.FXMLLoader;
@@ -21,9 +22,10 @@ import java.util.HashMap;
 public class Controller {
 
     
-	@FXML TextArea opText;
-    @FXML TextArea ipText;
-    @FXML TextField DebugText;
+	@FXML  TextArea opText;
+    @FXML  TextArea ipText;
+    @FXML  TextField DebugText;
+    @FXML static Menu devOptionsMenu;
     private HashMap<String,String> devOptions = new HashMap<String,String>();
     
     
@@ -57,12 +59,16 @@ public class Controller {
         String data = ((MenuItem)event.getSource()).getId();
         String devOption = this.devOptions.get(data);
         if(devOption==null) {
-        	System.out.println("No developer option exists for this alias");
+        	System.out.println("No developer option exists for this alias: "+data);
         	devOption = "";
         }
         _runCode(a,devOption);
 
     }
+    
+    
+    
+    
     
     public HashMap<String, String> getDevOptions() {
 		return devOptions;
@@ -71,6 +77,8 @@ public class Controller {
 	public void setDevOptions(String key, String value) {
 		this.devOptions.put(key, value);
 	}
+	
+	
 
     private String _getPath()
     {
@@ -119,17 +127,17 @@ public class Controller {
                 res= res+"\n"+ line;
 
             }
-            if(!res.contains(" error"))
+            if(res.contains(" error"))
             {
-                ipText.setStyle("-fx-text-inner-color: green;");
+                ipText.setStyle("-fx-text-inner-color: red;");
                 ipText.setText(res);
             }
-            else if(!res.contains(" warning")) {
+            else if(res.contains(" warning")) {
             	ipText.setStyle("-fx-text-inner-color: pink;");
                 ipText.setText(res);
             }
             else{
-                ipText.setStyle("-fx-text-inner-color: red;");
+                ipText.setStyle("-fx-text-inner-color: green;");
                 ipText.setText(res);
             }
 
@@ -170,6 +178,27 @@ public class Controller {
     public void find(String userMode){
         System.out.println(userMode);
         //return userMode;
+    }
+    
+    /**
+     * resets the fields whose IDs are passed as a space separated string in userData of the button
+     * the userData attribute in xml MUST follow the format as shown in addDevOptionDialogue.fxml:line17:userData
+     * the text fields to be resetted MUST share the same scene as this button
+     * @param event -- button whose onAction has trigerred this method. MUST be a button or any child of class Node
+     * @throws IOException 
+     */
+    @FXML
+    public void resetFields(ActionEvent event) throws IOException{
+    	event.consume();
+    	String data = (String) ((Node)event.getSource()).getUserData();
+    	System.out.println("Resetting text fields: "+ data);
+    	String[] textFieldIDs = data.split(" ");
+    	Scene scene = ((Node)event.getSource()).getScene();
+    	for(String id : textFieldIDs) {
+    		TextField tf = (TextField)scene.lookup("#"+id);
+    		tf.clear();
+    	}
+    	
     }
 
 
