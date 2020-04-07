@@ -21,7 +21,8 @@ public class Controller {
     @FXML TextArea opText;
     @FXML TextArea ipText;
     @FXML TextField DebugText;
-
+    static String userMode;
+    
     @FXML
     private void runCMD(ActionEvent event) throws IOException {
         event.consume();
@@ -126,6 +127,24 @@ public class Controller {
     public void find(String userMode){
         System.out.println(userMode);
         //return userMode;
+    }
+    
+    @FXML
+    public void changeUserType(ActionEvent event) throws IOException{
+    	event.consume();
+    	this._saveTempFile(opText.getText());	//saving file
+    	final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage=new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("scene1.fxml"));
+        primaryStage.setTitle("Change User Type");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        dialog.setTitle("Change User Type");
+        dialog.setResizable(false);
+        Scene dialogScene = new Scene(root, 640, 350);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 
 
