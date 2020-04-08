@@ -56,13 +56,15 @@
                     </items>
                   </Menu>
                   <MenuItem mnemonicParsing="false" text="Optimize Code" />
-                  <MenuItem mnemonicParsing="false" text="Add Developer Options" />
+                  
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Developer Options">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
+                <Menu mnemonicParsing="false" fx:id ="devOptionsMenu" text="Developer Options">
+                    
+                        <MenuItem mnemonicParsing="false" onAction = "#runDev" id="dollar" text="Disallow $ in identifiers" />
+                        <MenuItem mnemonicParsing="false" onAction = "#runDev" id="warning" text="Show all warnings" />
+                        <MenuItem mnemonicParsing="false" onAction = "#runDev" id="verbose" text="Run verbose" />
+                    
                 </Menu>
             </menus>
         </MenuBar>
