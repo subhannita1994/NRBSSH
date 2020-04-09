@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="124.0" prefWidth="405.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+  <children>
+    <AnchorPane maxHeight="233.0" maxWidth="356.0" prefHeight="233.0" prefWidth="356.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label layoutX="73.0" layoutY="44.0" fx:id ="SuccessMsgc" prefHeight="18.0" prefWidth="204.0" text="Action Successful" />
+            
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>
