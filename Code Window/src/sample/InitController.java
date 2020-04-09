@@ -22,24 +22,32 @@ public class InitController {
 
     private static Stage stage=new Stage();
     public static Stage getStage() { return stage; }
-
+    
 
     @FXML
     private void startSceneNovice(ActionEvent event) throws IOException {
         event.consume();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        
         System.out.println("Hello Novice");
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = loader.load();
+        Controller oController= (Controller)loader.getController();
         Stage primaryStage= getStage();
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("FileName.cpp - Smart Gcc");
-        //Controller oSetMode = loader.getController();
-        Controller oController= loader.getController();
-     //   oController.find("NOVICE");
+        
+        oController.devOptionsMenu.setVisible(false);
+        oController.generateCode.setVisible(false);
+        oController.optimizeCode.setVisible(false);
+        
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
+        
+        primaryStage.setTitle("FileName.cpp - Smart Gcc");
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
+        
+        
 
     }
 
@@ -53,17 +61,49 @@ public class InitController {
 
     @FXML
     private void startSceneTypical(ActionEvent event) throws IOException {
-        event.consume();
-
+    	event.consume();
+        
         System.out.println("Hello Typical");
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = loader.load();
+        Controller oController= (Controller)loader.getController();
+        Stage primaryStage= getStage();
+        
+        oController.devOptionsMenu.setVisible(false);
+        oController.allOptionsGenerateCode.setVisible(false);
+        oController.allOptionsGenerateCode.setVisible(false);
+        
+        Stage stage = (Stage)closeButton.getScene().getWindow();
+        stage.close();
+        
+        primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        primaryStage.setScene(new Scene(root, 640, 300));
+        primaryStage.setMaximized(true);
+        primaryStage.show();
 
     }
 
     @FXML
     private void startSceneExpert(ActionEvent event) throws IOException {
-        event.consume();
-
-        System.out.println("Hello Expert");
+    	event.consume();
+        
+        System.out.println("Hello Novice");
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = loader.load();
+        Controller oController= (Controller)loader.getController();
+        Stage primaryStage= getStage();
+        
+        oController.allOptions.setVisible(false);
+        
+        Stage stage = (Stage)closeButton.getScene().getWindow();
+        stage.close();
+        
+        primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        primaryStage.setScene(new Scene(root, 640, 300));
+        primaryStage.setMaximized(true);
+        primaryStage.show();
 
 
 

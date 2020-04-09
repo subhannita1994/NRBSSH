@@ -45,17 +45,25 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Options">
                     <items>
-                  <Menu mnemonicParsing="false" text="Generate Code">
-                    <items>
+                  <Menu fx:id ="generateCode" mnemonicParsing="false" text="Generate Code">
+                    
                       <MenuItem mnemonicParsing="false" text="IF" />
                       <MenuItem mnemonicParsing="false" text="IF- ELSE IF" />
                         <MenuItem mnemonicParsing="false" text="FOR LOOP" />
                         <MenuItem mnemonicParsing="false" text="WHILE LOOP" />
                         <MenuItem mnemonicParsing="false" text="DO WHILE LOOP" />
                         <MenuItem mnemonicParsing="false" text="FUNCTION()" />
+                    
+                  </Menu>
+                  <MenuItem fx:id ="optimizeCode" mnemonicParsing="false" text="Optimize Code" />
+                  <MenuItem fx:id ="changeUserType" mnemonicParsing="false" text="Change User Type" onAction="#changeUserType"/>
+                  <Menu fx:id ="allOptions" mnemonicParsing="false" text="All options">
+                    <items>
+                      <MenuItem fx:id ="allOptionsGenerateCode" mnemonicParsing="false" text="Generate Code" />
+                      <MenuItem fx:id ="allOptionsOptimizeCode" mnemonicParsing="false" text="Optimize code" />
+                        <MenuItem fx:id ="allOptionsDevOptions" mnemonicParsing="false" text="Developer Options" />
                     </items>
                   </Menu>
-                  <MenuItem mnemonicParsing="false" text="Optimize Code" />
                   
                     </items>
                 </Menu>

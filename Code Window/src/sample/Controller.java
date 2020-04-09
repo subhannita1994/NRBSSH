@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 //import java.awt.*;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,12 +21,14 @@ import javafx.fxml.FXMLLoader;
 
 
 import java.io.*;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Controller {
+public class Controller{
 
     @FXML
     TextArea opText;
@@ -34,10 +37,19 @@ public class Controller {
     @FXML
     TextField DebugText;
     @FXML
-    static Menu devOptionsMenu;
+    Menu devOptionsMenu;
     @FXML
     Label SuccessMsg;
+    @FXML MenuItem optimizeCode;
+    @FXML MenuItem generateCode;
+    @FXML Menu allOptions;
+    @FXML MenuItem allOptionsGenerateCode;
+    @FXML MenuItem allOptionsOptimizeCode;
+    @FXML MenuItem allOptionsDevOptions;
+    
+    
     private HashMap<String, String> devOptions = new HashMap<String, String>();
+//    private HashMap<String, ArrayList<String>> 
 
     /**
      *
@@ -46,7 +58,17 @@ public class Controller {
         devOptions.put("dollar", "-fno-dollars-in-identifiers");
         devOptions.put("verbose", "-v");
         devOptions.put("warning", "-Wall");
+        
     }
+    
+    @FXML
+    public void initialize() {
+    	if(devOptionsMenu == null)
+    		System.out.println("fail");
+    }
+    
+    
+    
     @FXML
     public boolean isSaved() throws IOException {
       if(InitController.getStage().getTitle() == "FileName.cpp - Smart Gcc")
@@ -96,6 +118,81 @@ public class Controller {
         return savePath;
     }
 
+    private void _runCode(String Code,  String attachedCode) throws IOException {
+        String Location= _saveTempFile(Code);
+        Runtime runtime = Runtime.getRuntime();
+        ProcessBuilder builder = new ProcessBuilder();
+        //builder.command("cmd.exe", "/c", a);
+        //builder.command("cmd.exe", "/c", "cd"+Location+" && dir & java out.java"); // executing commands of gcc
+        final String os = System.getProperty("os.name").toLowerCase();
+        if(os.indexOf("win") >= 0)
+        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
+        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
+        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
+        builder.redirectErrorStream(true);
+        try {
+            Process p = builder.start();
+            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            String line;
+            String res = "";
+            while (true) {
+                line = r.readLine();
+                if (line == null) {
+                    break;
+                }
+                System.out.println(line);
+                res= res+"\n"+ line;
+
+            }
+            if(res.contains(" error"))
+            {
+                ipText.setStyle("-fx-text-inner-color: red;");
+                ipText.setText(res);
+            }
+            else if(res.contains(" warning")) {
+            	ipText.setStyle("-fx-text-inner-color: pink;");
+                ipText.setText(res);
+            }
+            else{
+                ipText.setStyle("-fx-text-inner-color: green;");
+                ipText.setText(res);
+            }
+
+
+        } catch (Exception e1) {
+        	
+            e1.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void debugCMD(ActionEvent event) throws IOException {
+        event.consume();
+        System.out.println("Debug Method");
+        String a= opText.getText();
+        System.out.println(a);
+        String attachedCode= DebugText.getText();
+        _runCode(a,attachedCode);
+    }
+    
+    @FXML
+    public void debug(ActionEvent event) throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage=new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("DebugDialog.fxml"));
+        primaryStage.setTitle("Debug");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        dialog.setTitle("Debug");
+        dialog.setResizable(false);
+        Scene dialogScene = new Scene(root, 405, 124);
+        dialog.setScene(dialogScene);
+        dialog.show();
+
+    }
+    
     private String _saveTempFile(String code) throws IOException {
         String savePath = _getPath();
         File saveLocation = new File(savePath);
@@ -221,63 +318,7 @@ public class Controller {
         return stringBuffer.toString();
     }
 
-    private void _runCode(String Code,  String attachedCode) throws IOException {
-        String Location= _saveTempFile(Code);
-        Runtime runtime = Runtime.getRuntime();
-        ProcessBuilder builder = new ProcessBuilder();
-        //builder.command("cmd.exe", "/c", a);
-        //builder.command("cmd.exe", "/c", "cd"+Location+" && dir & java out.java"); // executing commands of gcc
-        final String os = System.getProperty("os.name").toLowerCase();
-        if(os.indexOf("win") >= 0)
-        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
-        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
-        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
-        builder.redirectErrorStream(true);
-        try {
-            Process p = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            String line;
-            String res = "";
-            while (true) {
-                line = r.readLine();
-                if (line == null) {
-                    break;
-                }
-                System.out.println(line);
-                res= res+"\n"+ line;
-
-            }
-            if(res.contains(" error"))
-            {
-                ipText.setStyle("-fx-text-inner-color: red;");
-                ipText.setText(res);
-            }
-            else if(res.contains(" warning")) {
-            	ipText.setStyle("-fx-text-inner-color: pink;");
-                ipText.setText(res);
-            }
-            else{
-                ipText.setStyle("-fx-text-inner-color: green;");
-                ipText.setText(res);
-            }
-
-
-        } catch (Exception e1) {
-        	
-            e1.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void debugCMD(ActionEvent event) throws IOException {
-        event.consume();
-        System.out.println("Debug Method");
-        String a= opText.getText();
-        System.out.println(a);
-        String attachedCode= DebugText.getText();
-        _runCode(a,attachedCode);
-    }
+    
 
     @FXML
     public void onSuccess() throws IOException {
@@ -315,23 +356,14 @@ public class Controller {
 
     }
 
-
     @FXML
-    public void debug(ActionEvent event) throws IOException {
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        Stage primaryStage=new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("DebugDialog.fxml"));
-        primaryStage.setTitle("Debug");
-        primaryStage.setResizable(false);
-        dialog.initOwner(primaryStage);
-        dialog.setTitle("Debug");
-        dialog.setResizable(false);
-        Scene dialogScene = new Scene(root, 405, 124);
-        dialog.setScene(dialogScene);
-        dialog.show();
-
+    public void changeUserType(ActionEvent event) throws IOException{
+    	String title = InitController.getStage().getTitle();
+    	//TODO: to be implemented later
+    	
     }
+
+    
     @FXML
     public void find(String userMode){
         System.out.println(userMode);
@@ -358,6 +390,8 @@ public class Controller {
     	}
     	
     }
+
+	
 
 
 }
