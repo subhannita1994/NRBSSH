@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="335.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.changeUserTypeController">
+   <children>
+      <Button layoutX="42.0" fx:id="closeButtonChangeUserType" layoutY="37.0" mnemonicParsing="false" onAction="#changeUserType" userData="novice" prefHeight="64.0" prefWidth="171.0" text="Novice" />
+      <Button layoutX="42.0" layoutY="141.0" mnemonicParsing="false" prefHeight="64.0" onAction="#changeUserType" userData="typical" prefWidth="171.0" text="Typical" />
+      <Button layoutX="42.0" layoutY="242.0" mnemonicParsing="false" prefHeight="64.0" onAction="#changeUserType" userData="expert" prefWidth="171.0" text="Expert" />
+      <Separator layoutX="137.0" layoutY="22.0" prefHeight="4.0" prefWidth="161.0" />
+      <Label layoutX="28.0" layoutY="15.0" text="Choose User Type:" />
+      <Separator layoutX="308.0" layoutY="32.0" orientation="VERTICAL" prefHeight="276.0" prefWidth="1.0" />
+      <TextArea editable="false" layoutX="326.0" layoutY="37.0" prefHeight="269.0" prefWidth="287.0" />
+      <Separator layoutX="326.0" layoutY="22.0" prefHeight="4.0" prefWidth="233.0" />
+      <Label layoutX="569.0" layoutY="15.0" text="DETAILS" />
+   </children>
+</AnchorPane>

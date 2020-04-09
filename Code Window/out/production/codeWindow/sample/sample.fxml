@@ -56,12 +56,12 @@
                     
                   </Menu>
                   <MenuItem fx:id ="optimizeCode" mnemonicParsing="false" text="Optimize Code" />
-                  <MenuItem fx:id ="changeUserType" mnemonicParsing="false" text="Change User Type" onAction="#changeUserType"/>
+                  <MenuItem fx:id ="changeUserType" mnemonicParsing="false" text="Change User Type" onAction="#changeUserTypeDialog"/>
                   <Menu fx:id ="allOptions" mnemonicParsing="false" text="All options">
                     <items>
-                      <MenuItem fx:id ="allOptionsGenerateCode" mnemonicParsing="false" text="Generate Code" />
-                      <MenuItem fx:id ="allOptionsOptimizeCode" mnemonicParsing="false" text="Optimize code" />
-                        <MenuItem fx:id ="allOptionsDevOptions" mnemonicParsing="false" text="Developer Options" />
+                      <MenuItem fx:id ="allOptionsGenerateCode" mnemonicParsing="false" text="Generate Code" onAction="#makeComponentVisible"/>
+                      <MenuItem fx:id ="allOptionsOptimizeCode" mnemonicParsing="false" text="Optimize code" onAction="#makeComponentVisible"/>
+                      <MenuItem fx:id ="allOptionsDevOptions" mnemonicParsing="false" text="Developer Options" onAction="#makeComponentVisible"/>
                     </items>
                   </Menu>
                   
@@ -95,8 +95,8 @@
                <children>
                   <Button layoutX="768.0" layoutY="8.0" mnemonicParsing="false" onAction="#debug" text="Debug" />
                   <Button layoutX="718.0" layoutY="8.0" mnemonicParsing="false" onAction="#runCMD" text="Run" />
-                  <Label layoutX="486.0" layoutY="12.0" text="User Mode:" />
-                  <ComboBox layoutX="554.0" layoutY="8.0" prefWidth="150.0" />
+                  <!--<Label layoutX="486.0" layoutY="12.0" text="User Mode:" />
+                  <ComboBox layoutX="554.0" layoutY="8.0" prefWidth="150.0" />-->
                   <Label layoutX="22.0" layoutY="12.0" text="Enter Input Code Below" />
                 <!--  <Separator layoutX="157.0" layoutY="19.0" prefHeight="0.0" prefWidth="319.0" />-->
                  </children>

@@ -35,6 +35,7 @@ public class InitController {
         Controller oController= (Controller)loader.getController();
         Stage primaryStage= getStage();
         
+        oController.makeAllVisible();
         oController.devOptionsMenu.setVisible(false);
         oController.generateCode.setVisible(false);
         oController.optimizeCode.setVisible(false);
@@ -70,9 +71,10 @@ public class InitController {
         Controller oController= (Controller)loader.getController();
         Stage primaryStage= getStage();
         
+        oController.makeAllVisible();
         oController.devOptionsMenu.setVisible(false);
         oController.allOptionsGenerateCode.setVisible(false);
-        oController.allOptionsGenerateCode.setVisible(false);
+        oController.allOptionsOptimizeCode.setVisible(false);
         
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
@@ -95,6 +97,7 @@ public class InitController {
         Controller oController= (Controller)loader.getController();
         Stage primaryStage= getStage();
         
+        oController.makeAllVisible();
         oController.allOptions.setVisible(false);
         
         Stage stage = (Stage)closeButton.getScene().getWindow();

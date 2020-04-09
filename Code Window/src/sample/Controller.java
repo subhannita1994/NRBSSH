@@ -46,10 +46,9 @@ public class Controller{
     @FXML MenuItem allOptionsGenerateCode;
     @FXML MenuItem allOptionsOptimizeCode;
     @FXML MenuItem allOptionsDevOptions;
+    @FXML Button closeButtonChangeUserType;
     
-    
-    private HashMap<String, String> devOptions = new HashMap<String, String>();
-//    private HashMap<String, ArrayList<String>> 
+    private static HashMap<String, String> devOptions = new HashMap<String, String>();
 
     /**
      *
@@ -63,8 +62,7 @@ public class Controller{
     
     @FXML
     public void initialize() {
-    	if(devOptionsMenu == null)
-    		System.out.println("fail");
+    	
     }
     
     
@@ -357,11 +355,23 @@ public class Controller{
     }
 
     @FXML
-    public void changeUserType(ActionEvent event) throws IOException{
-    	String title = InitController.getStage().getTitle();
-    	//TODO: to be implemented later
+    public void changeUserTypeDialog(ActionEvent event) throws IOException{
+    	
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("changeUserType.fxml"));
+        Parent root = loader.load();
+        Stage primaryStage= new Stage();
+        changeUserTypeController oController= (changeUserTypeController)loader.getController();
+        oController.setGoBack(this);
+        
+        primaryStage.setTitle("Change User Type");
+        primaryStage.setScene(new Scene(root, 640, 350));
+        primaryStage.setResizable(false);
+        primaryStage.setMaximized(false);
+        primaryStage.show();
     	
     }
+    
+    
 
     
     @FXML
@@ -391,7 +401,47 @@ public class Controller{
     	
     }
 
+    /**
+     * make all options visible before setting some off
+     * otherwise when you switch from (example:) typical to novice, the options that are by default invisible for typical remain invisible
+     */
+	public void makeAllVisible() {
+		this.generateCode.setVisible(true);
+		this.optimizeCode.setVisible(true);
+		this.allOptions.setVisible(true);
+		this.allOptionsDevOptions.setVisible(true);
+		this.allOptionsGenerateCode.setVisible(true);
+		this.allOptionsOptimizeCode.setVisible(true);
+		this.devOptionsMenu.setVisible(true);
+	}
 	
+	/**
+	 * make a particular component visible when user selects from all options
+	 * @param event
+	 */
+	@FXML
+	public void makeComponentVisible(ActionEvent event) {
+		event.consume();
+		String id = ((MenuItem)event.getSource()).getId();
+		if(id.equals("allOptionsGenerateCode")) {
+			allOptionsGenerateCode.setVisible(false);
+			generateCode.setVisible(true);
+		}else if(id.equals("allOptionsOptimizeCode")) {
+			allOptionsOptimizeCode.setVisible(false);
+			optimizeCode.setVisible(true);
+		}else if(id.equals("allOptionsDevOptions")) {
+			allOptionsDevOptions.setVisible(false);
+			devOptionsMenu.setVisible(true);
+		}
+	}
 
 
 }
+
+
+
+
+
+
+
+
