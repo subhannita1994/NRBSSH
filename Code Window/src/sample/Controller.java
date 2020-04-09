@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,34 +13,55 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Controller {
 
-    
-	@FXML  TextArea opText;
-    @FXML  TextArea ipText;
-    @FXML  TextField DebugText;
-    @FXML static Menu devOptionsMenu;
-    private HashMap<String,String> devOptions = new HashMap<String,String>();
-    
-    
+    @FXML
+    TextArea opText;
+    @FXML
+    TextArea ipText;
+    @FXML
+    TextField DebugText;
+    @FXML
+    static Menu devOptionsMenu;
+    @FXML
+    Label SuccessMsg;
+    private HashMap<String, String> devOptions = new HashMap<String, String>();
 
-	/**
-	 * 
-	 */
-	public Controller() {
-		devOptions.put("dollar", "-fno-dollars-in-identifiers");
-		devOptions.put("verbose", "-v");
-		devOptions.put("warning", "-Wall");
-		
-	}
-
+    /**
+     *
+     */
+    public Controller() {
+        devOptions.put("dollar", "-fno-dollars-in-identifiers");
+        devOptions.put("verbose", "-v");
+        devOptions.put("warning", "-Wall");
+    }
+    @FXML
+    public boolean isSaved() throws IOException {
+      if(InitController.getStage().getTitle() == "FileName.cpp - Smart Gcc")
+      {return false; }
+      return true;
+    }
+    @FXML
+    private void close(ActionEvent event) throws IOException {
+        if(isSaved()){
+            InitController.getStage().close();
+        }
+        else{
+            saveAsFile();
+        }
+    }
     @FXML
     private void runCMD(ActionEvent event) throws IOException {
         event.consume();
@@ -47,9 +69,7 @@ public class Controller {
          String a= opText.getText();
         System.out.println(a);
         _runCode(a,"");
-
     }
-    
     @FXML
     private void runDev(ActionEvent event) throws IOException {
         event.consume();
@@ -63,23 +83,13 @@ public class Controller {
         	devOption = "";
         }
         _runCode(a,devOption);
-
     }
-    
-    
-    
-    
-    
     public HashMap<String, String> getDevOptions() {
 		return devOptions;
 	}
-
 	public void setDevOptions(String key, String value) {
 		this.devOptions.put(key, value);
 	}
-	
-	
-
     private String _getPath()
     {
         String savePath = System.getProperty("user.dir") + System.getProperty("file.separator");
@@ -98,6 +108,117 @@ public class Controller {
             textFileWriter.close();
         }
         return Location;
+    }
+
+    @FXML
+    public void fileInput(ActionEvent arg0) {
+        FileChooser fileChooser = new FileChooser();
+
+        //Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CPP files (*.cpp)", "*.cpp");
+        FileChooser.ExtensionFilter extFilter2 = new FileChooser.ExtensionFilter("C files (*.c)", "*.c");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.getExtensionFilters().add(extFilter2);
+
+        //Show save file dialog
+        Stage primaryStage=new Stage();
+        File file = fileChooser.showOpenDialog(primaryStage);
+        if(file != null){
+            opText.setText(readFile(file));
+        }
+    }
+
+    @FXML
+    private String saveAsFile() throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        String msg="Success";
+
+        //Set extension filter for text files
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CPP files (*.cpp)", "*.cpp");
+        FileChooser.ExtensionFilter extFilter2 = new FileChooser.ExtensionFilter("C files (*.c)", "*.c");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.getExtensionFilters().add(extFilter2);
+        Stage primaryStage=new Stage();
+        File file = fileChooser.showSaveDialog(primaryStage);
+        InitController.getStage().setTitle(file.toString()+"  - SmartGCC");
+
+
+
+        if (file != null) {
+            saveTextToFile(opText.getText(), file);
+            this.onSuccess();
+            return msg;
+        }
+        else{
+            this.onError();
+            return msg="Error";
+        }
+    }
+
+    @FXML
+    private void saveFile() throws IOException {
+        if(!isSaved()){
+            FileChooser fileChooser = new FileChooser();
+            String msg="Success";
+            //Set extension filter for text files
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CPP files (*.cpp)", "*.cpp");
+            FileChooser.ExtensionFilter extFilter2 = new FileChooser.ExtensionFilter("C files (*.c)", "*.c");
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.getExtensionFilters().add(extFilter2);
+            Stage primaryStage=new Stage();
+            File file = fileChooser.showSaveDialog(primaryStage);
+            InitController.getStage().setTitle(file.toString()+"  - SmartGCC");
+            if (file != null) {
+                saveTextToFile(opText.getText(), file);
+                this.onSuccess();
+            }
+            else{
+                this.onError();
+            }
+        }
+        else{
+            File file = new File(InitController.getStage().getTitle());
+            saveTextToFile(opText.getText(), file);
+        }
+
+    }
+
+
+    private void saveTextToFile(String content, File file) {
+        try {
+            PrintWriter writer;
+            writer = new PrintWriter(file);
+            writer.println(content);
+            writer.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private String readFile(File file){
+        StringBuilder stringBuffer = new StringBuilder();
+        BufferedReader bufferedReader = null;
+        try {
+
+            bufferedReader = new BufferedReader(new FileReader(file));
+
+            String text;
+            while ((text = bufferedReader.readLine()) != null) {
+                stringBuffer.append(text+"\n");
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return stringBuffer.toString();
     }
 
     private void _runCode(String Code,  String attachedCode) throws IOException {
@@ -157,6 +278,43 @@ public class Controller {
         String attachedCode= DebugText.getText();
         _runCode(a,attachedCode);
     }
+
+    @FXML
+    public void onSuccess() throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage=new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("SuccessDialog.fxml"));
+        primaryStage.setTitle("Success");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        dialog.setTitle("Success");
+        dialog.setResizable(false);
+        //Label divider = new Label();
+        Scene dialogScene = new Scene(root, 405, 124);
+        dialog.setScene(dialogScene);
+        dialog.show();
+
+    }
+
+    @FXML
+    public void onError() throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage=new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("ErrorDialog.fxml"));
+        primaryStage.setTitle("Error");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        dialog.setTitle("Error");
+        dialog.setResizable(false);
+        //Label divider = new Label();
+        Scene dialogScene = new Scene(root, 405, 124);
+        dialog.setScene(dialogScene);
+        dialog.show();
+
+    }
+
 
     @FXML
     public void debug(ActionEvent event) throws IOException {

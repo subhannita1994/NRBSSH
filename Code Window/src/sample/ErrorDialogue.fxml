@@ -10,10 +10,8 @@
   <children>
     <AnchorPane maxHeight="233.0" maxWidth="356.0" prefHeight="233.0" prefWidth="356.0" VBox.vgrow="ALWAYS">
          <children>
-            <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="138.0" text="Enter Debug Code" />
-            <TextField layoutX="14.0"  id="DebugText" layoutY="38.0" prefHeight="25.0" prefWidth="363.0" />
-            <Button layoutX="264.0" layoutY="85.0" mnemonicParsing="false" text="Reset" onAction="#resetFields" userData="DebugText"/>
-            <Button layoutX="325.0" layoutY="85.0" mnemonicParsing="false" text="Debug" />
+            <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="138.0" text="Action not Successful" />
+
          </children>
     </AnchorPane>
   </children>
