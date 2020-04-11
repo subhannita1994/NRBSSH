@@ -2,28 +2,20 @@ package sample;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 //import java.awt.*;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
 
 
 import java.io.*;
-import java.net.URL;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,6 +42,8 @@ public class Controller{
     
     private static HashMap<String, String> devOptions = new HashMap<String, String>();
 
+    
+
     /**
      *
      */
@@ -57,15 +51,16 @@ public class Controller{
         devOptions.put("dollar", "-fno-dollars-in-identifiers");
         devOptions.put("verbose", "-v");
         devOptions.put("warning", "-Wall");
-        
+      
     }
-    
     @FXML
     public void initialize() {
     	
     }
     
     
+    
+	
     
     @FXML
     public boolean isSaved() throws IOException {
@@ -191,7 +186,7 @@ public class Controller{
 
     }
     
-    private String _saveTempFile(String code) throws IOException {
+    public String _saveTempFile(String code) throws IOException {
         String savePath = _getPath();
         File saveLocation = new File(savePath);
         String Location=  System.getProperty("user.dir");
@@ -437,6 +432,8 @@ public class Controller{
 
 
 }
+
+
 
 
 
