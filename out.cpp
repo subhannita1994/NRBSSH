@@ -6,7 +6,7 @@
    int  n=10;
      cout << "Enter value";
      cin >> n;
-     cout << "Enter i";
+     cout << "Enter i"
      cin>> i;
      m=n/i;
      cout<< m;

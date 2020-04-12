@@ -1,3 +1,4 @@
+/*
 @Override
 public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("fxml_saved.fxml"));
@@ -8,4 +9,4 @@ public void start(Stage stage) throws Exception {
         stage.setScene(scene);
         stage.show();
         Optimizer.main("fxml_saved.fxml");
-        }
+        }*/

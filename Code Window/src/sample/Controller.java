@@ -79,7 +79,7 @@ public class Controller implements CommandListener, Terminal {
     public void initialize() {
 		ipText.setOnKeyPressed(event->{
 			if (event.getCode() == KeyCode.ENTER){
-		    	int range = ipText.getCaretPosition() - userInputStart;
+		    	int range = ipText.getCaretPosition()-1 - userInputStart;
 				try {
 					String text = ipText.getText().trim();
 					text=text.substring(userInputStart, userInputStart+range);
@@ -104,6 +104,8 @@ public class Controller implements CommandListener, Terminal {
     @FXML
     private void runCMD(ActionEvent event) throws IOException {
         event.consume();
+		System.out.println("Run Pressed");
+		ipText.clear();
         System.out.println("Running(Normal configuration)...");
          String a= opText.getText();
        // System.out.println(a);
