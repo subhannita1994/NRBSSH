@@ -1,6 +1,13 @@
+# 1 "out.cpp"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 373 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "out.cpp" 2
 int something(){
 
-	return 1;
+ return 1;
 }
 int main()
 {
@@ -10,15 +17,15 @@ int main()
 
      p = &local1;
      local1 = 10;
-     
+
    }
    {
       int local2;
       local2 = 20;
-      
+
    }
 
-   if (*p == 10)  // out of scope use of local1
+   if (*p == 10)
      {
 
      }
@@ -26,4 +33,3 @@ int main()
 
 
 }
-

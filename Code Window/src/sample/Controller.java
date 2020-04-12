@@ -40,17 +40,38 @@ public class Controller{
     @FXML MenuItem allOptionsDevOptions;
     @FXML Button closeButtonChangeUserType;
     
-    private static HashMap<String, String> devOptions = new HashMap<String, String>();
-
+    
+    private static HashMap<String, String> options = new HashMap<String, String>();
+    private static HashMap<String, Boolean> selectedOptions = new HashMap<String, Boolean>();
     
 
     /**
      *
      */
     public Controller() {
-        devOptions.put("dollar", "-fno-dollars-in-identifiers");
-        devOptions.put("verbose", "-v");
-        devOptions.put("warning", "-Wall");
+    	options.put("dev1", "-ftime-report");// g++ -ftime-report out.cpp -o -
+    	options.put("dev2","-print-search-dirs");//g++ -print-search-dirs out.cpp -o -
+    	options.put("dev3", "-save-temps"); //g++ -save-temps out.cpp -o -
+//        options.put("dev1", "-fno-dollars-in-identifiers"); 
+//        options.put("dev2", "-v");
+//        options.put("dev3", "-Wall");
+        options.put("link1", "-nostartfiles");
+        options.put("link2", "-r");
+        options.put("link3", "-static-libstdc++");
+        options.put("opt1", "-O1");//g++ -O1 out.cpp -o -
+        options.put("opt2", "-O2");
+        options.put("opt3", "-O3");
+        options.put("opt4", "-Os");
+        options.put("opt5", "-Ofast");//
+        options.put("gen1", "-fverbose-asm");//g++ -S  out.cpp -fverbose-asm -o -
+        options.put("gen2", "-fexceptions"); //g++ -S  out.cpp -fexceptions -o -
+        options.put("gen3", "-fshort-enums"); //g++ -S  out.cpp -fshort-enums -o -
+        
+        
+        
+        selectedOptions.put("dev1",false);
+        selectedOptions.put("dev2",false);
+        selectedOptions.put("dev3",false);
       
     }
     @FXML
@@ -83,27 +104,53 @@ public class Controller{
         System.out.println("Running(Normal configuration)...");
          String a= opText.getText();
         System.out.println(a);
-        _runCode(a,"");
-    }
-    @FXML
-    private void runDev(ActionEvent event) throws IOException {
-        event.consume();
-        System.out.println("Running(Developer option)...");
-         String a= opText.getText();
-        System.out.println(a);
-        String data = ((MenuItem)event.getSource()).getId();
-        String devOption = this.devOptions.get(data);
-        if(devOption==null) {
-        	System.out.println("No developer option exists for this alias: "+data);
-        	devOption = "";
+        String runOptions = "";
+        for(String key : selectedOptions.keySet()) {
+        	if(selectedOptions.get(key)==true)
+        		runOptions+= " "+options.get(key);
         }
-        _runCode(a,devOption);
+        _runCode(a,runOptions);
     }
-    public HashMap<String, String> getDevOptions() {
-		return devOptions;
+    
+    @FXML
+    private void checkOption(ActionEvent event) throws IOException{
+    	event.consume();
+    	System.out.println("Running options...");
+    	String a = opText.getText();
+    	System.out.println(a);
+    	String data = ((CheckMenuItem)event.getSource()).getId();
+    	Boolean checkedState = ((CheckMenuItem)event.getSource()).isSelected();
+    	if(selectedOptions.containsKey(data))
+    		selectedOptions.put(data, checkedState);
+    }
+    
+    
+    
+//    @FXML
+//    private void runDev(ActionEvent event) throws IOException {
+//        event.consume();
+//        System.out.println("Running(Developer option)...");
+//         String a= opText.getText();
+//        System.out.println(a);
+//        String data = ((MenuItem)event.getSource()).getId();
+//        String devOption = this.devOptions.get(data);
+//        if(devOption==null) {
+//        	System.out.println("No developer option exists for this alias: "+data);
+//        	devOption = "";
+//        }
+//        _runCode(a,devOption);
+//    }
+    public HashMap<String, String> getOptions() {
+		return options;
 	}
-	public void setDevOptions(String key, String value) {
-		this.devOptions.put(key, value);
+	public void setOptions(String key, String value) {
+		options.put(key, value);
+	}
+	public HashMap<String, Boolean> getSelectedOptions() {
+		return selectedOptions;
+	}
+	public void setSelectedOptions(String key, Boolean value) {
+		selectedOptions.put(key, value);
 	}
     private String _getPath()
     {
