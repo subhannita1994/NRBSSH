@@ -90,7 +90,7 @@ public class InitController {
     private void startSceneExpert(ActionEvent event) throws IOException {
     	event.consume();
         
-        System.out.println("Hello Novice");
+        System.out.println("Hello Expert");
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();

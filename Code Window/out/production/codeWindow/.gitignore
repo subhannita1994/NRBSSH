@@ -1,2 +1,7 @@
 /sample/
 /out/
+/-
+/out.bc
+/out.ii
+/out.o
+/out.s

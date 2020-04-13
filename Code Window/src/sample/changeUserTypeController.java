@@ -18,7 +18,11 @@ public class changeUserTypeController {
 		String userChoice = ((Button)event.getSource()).getUserData().toString();
 		Stage stage = (Stage)closeButtonChangeUserType.getScene().getWindow();
         stage.close();
+        
+        
+		oController.resetSelectedOptions();
         oController.makeAllVisible();
+        
         if(userChoice.equals("novice")) {
         	System.out.println("user chose novice");
         	oController.devOptionsMenu.setVisible(false);

@@ -32,32 +32,61 @@ public class Controller{
     Menu devOptionsMenu;
     @FXML
     Label SuccessMsg;
-    @FXML MenuItem optimizeCode;
-    @FXML MenuItem generateCode;
+    @FXML Menu optimizeCode;
+    @FXML Menu generateCode;
     @FXML Menu allOptions;
     @FXML MenuItem allOptionsGenerateCode;
     @FXML MenuItem allOptionsOptimizeCode;
     @FXML MenuItem allOptionsDevOptions;
     @FXML Button closeButtonChangeUserType;
+    @FXML CheckMenuItem dev1;
+    @FXML CheckMenuItem dev2;
+    @FXML CheckMenuItem dev3;
+    @FXML CheckMenuItem link1;
+    @FXML CheckMenuItem link2;
+    @FXML CheckMenuItem link3;
+    @FXML CheckMenuItem gen1;
+    @FXML CheckMenuItem gen2;
+    @FXML CheckMenuItem gen3;
+    @FXML RadioMenuItem opt1;
+    @FXML RadioMenuItem opt2;
+    @FXML RadioMenuItem opt3;
+    @FXML RadioMenuItem opt4;
+    @FXML RadioMenuItem opt5;
     
-    private static HashMap<String, String> devOptions = new HashMap<String, String>();
-
+    
+    private static HashMap<String, String> options = new HashMap<String, String>();
+    private static HashMap<String, Boolean> selectedOptions = new HashMap<String, Boolean>();
     
 
     /**
      *
      */
     public Controller() {
-        devOptions.put("dollar", "-fno-dollars-in-identifiers");
-        devOptions.put("verbose", "-v");
-        devOptions.put("warning", "-Wall");
+    	options.put("dev1", "-ftime-report");// g++ -ftime-report out.cpp -o -
+    	options.put("dev2","-print-search-dirs");//g++ -print-search-dirs out.cpp -o -
+    	options.put("dev3", "-save-temps"); //g++ -save-temps out.cpp -o -
+//        options.put("dev1", "-fno-dollars-in-identifiers"); 
+//        options.put("dev2", "-v");
+//        options.put("dev3", "-Wall");
+        options.put("link1", "-nostartfiles");//g++ -nostartfiles out.cpp -o -
+        options.put("link2", "-r");
+        options.put("link3", "-static-libstdc++");
+        options.put("opt1", "-O1");//g++ -O1 out.cpp -o -
+        options.put("opt2", "-O2");
+        options.put("opt3", "-O3");
+        options.put("opt4", "-Os");
+        options.put("opt5", "-Ofast");//
+        options.put("gen1", "-fverbose-asm");//g++ -S  out.cpp -fverbose-asm -o -
+        options.put("gen2", "-fexceptions"); //g++ -S  out.cpp -fexceptions -o -
+        options.put("gen3", "-fshort-enums"); //g++ -S  out.cpp -fshort-enums -o -
+        
+        
       
     }
     @FXML
     public void initialize() {
-    	
     }
-    
     
     
 	
@@ -77,33 +106,67 @@ public class Controller{
             saveAsFile();
         }
     }
+    
+    /**
+     * runs the code: sends the run configurations to _runcode()
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void runCMD(ActionEvent event) throws IOException {
         event.consume();
-        System.out.println("Running(Normal configuration)...");
          String a= opText.getText();
         System.out.println(a);
-        _runCode(a,"");
-    }
-    @FXML
-    private void runDev(ActionEvent event) throws IOException {
-        event.consume();
-        System.out.println("Running(Developer option)...");
-         String a= opText.getText();
-        System.out.println(a);
-        String data = ((MenuItem)event.getSource()).getId();
-        String devOption = this.devOptions.get(data);
-        if(devOption==null) {
-        	System.out.println("No developer option exists for this alias: "+data);
-        	devOption = "";
+        String runOptions = "";
+        boolean flag = false;
+        for(String key : selectedOptions.keySet()) {
+        	if(selectedOptions.get(key)==true)
+        		runOptions+= " "+options.get(key);
+        	if(key.contains("gen"))
+        		flag = true;
         }
-        _runCode(a,devOption);
+        if(flag)
+        	runOptions = " -S "+runOptions;
+        System.out.println("Running..."+runOptions);
+        _runCode(a,runOptions);
     }
-    public HashMap<String, String> getDevOptions() {
-		return devOptions;
+    
+    /**
+     * action handler when any option is selected (except anything under all options): sets the HashMap value of corresponding option to true
+     * @param event
+     * @throws IOException
+     */
+    @FXML
+    private void checkOption(ActionEvent event) throws IOException{
+    	event.consume();
+    	System.out.println("Adding options...");
+    	String id = ((MenuItem)event.getSource()).getId();
+    	if(event.getSource() instanceof RadioMenuItem) {	//its an optimization option
+    		selectedOptions.put("opt1",false);
+            selectedOptions.put("opt2",false);
+            selectedOptions.put("opt3",false);
+            selectedOptions.put("opt4",false);
+            selectedOptions.put("opt5",false);
+            selectedOptions.put(id, true);
+    	}else {	//it could be linker/code generation/ developer options
+    		Boolean checkedData = ((CheckMenuItem)event.getSource()).isSelected();
+    		selectedOptions.put(id, checkedData);
+    	}
+    }
+    
+    
+  
+    public HashMap<String, String> getOptions() {
+		return options;
 	}
-	public void setDevOptions(String key, String value) {
-		this.devOptions.put(key, value);
+	public void setOptions(String key, String value) {
+		options.put(key, value);
+	}
+	public HashMap<String, Boolean> getSelectedOptions() {
+		return selectedOptions;
+	}
+	public void setSelectedOptions(String key, Boolean value) {
+		selectedOptions.put(key, value);
 	}
     private String _getPath()
     {
@@ -349,6 +412,11 @@ public class Controller{
 
     }
 
+    /**
+     * action handler for change user type menuItem : launched the dialogue box changeUserType.fxml
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void changeUserTypeDialog(ActionEvent event) throws IOException{
     	
@@ -428,6 +496,41 @@ public class Controller{
 			allOptionsDevOptions.setVisible(false);
 			devOptionsMenu.setVisible(true);
 		}
+	}
+	/**
+	 * reset all checks against all options, i.e., configuration will now be run without any additional options until an option is selected
+	 */
+	@FXML
+	public void resetSelectedOptions() {
+		selectedOptions.put("dev1",false);
+        selectedOptions.put("dev2",false);
+        selectedOptions.put("dev3",false);
+        selectedOptions.put("link1",false);
+        selectedOptions.put("link2",false);
+        selectedOptions.put("link3",false);
+        selectedOptions.put("gen1",false);
+        selectedOptions.put("gen2",false);
+        selectedOptions.put("gen3",false);
+        selectedOptions.put("opt1",true);	//O1 is selected by default
+        selectedOptions.put("opt2",false);
+        selectedOptions.put("opt3",false);
+        selectedOptions.put("opt4",false);
+        selectedOptions.put("opt5",false);
+        
+		dev1.setSelected(false);
+		dev2.setSelected(false);
+		dev3.setSelected(false);
+		gen1.setSelected(false);
+		gen2.setSelected(false);
+		gen3.setSelected(false);
+		link1.setSelected(false);
+		link2.setSelected(false);
+		link3.setSelected(false);
+		opt1.setSelected(true);
+		opt2.setSelected(false);
+		opt3.setSelected(false);
+		opt4.setSelected(false);
+		opt5.setSelected(false);
 	}
 
 
