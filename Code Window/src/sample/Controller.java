@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,15 +20,15 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.SwingUtilities;
 
-public class Controller{
+
+public class Controller implements CommandListener, Terminal{
 
     @FXML
     TextArea opText;
     @FXML
     TextArea ipText;
-    @FXML
-    TextField DebugText;
     @FXML
     Menu devOptionsMenu;
     @FXML
@@ -54,7 +55,8 @@ public class Controller{
     @FXML RadioMenuItem opt4;
     @FXML RadioMenuItem opt5;
     
-    
+    private Command cmd;
+    private int userInputStart = 0;
     private static HashMap<String, String> options = new HashMap<String, String>();
     private static HashMap<String, Boolean> selectedOptions = new HashMap<String, Boolean>();
     
@@ -81,11 +83,33 @@ public class Controller{
         options.put("gen2", "-fexceptions"); //g++ -S  out.cpp -fexceptions -o -
         options.put("gen3", "-fshort-enums"); //g++ -S  out.cpp -fshort-enums -o -
         
-        
+        cmd = new Command(this);
       
     }
     @FXML
     public void initialize() {
+    	ipText.setOnKeyPressed(event->{
+			if (event.getCode() == KeyCode.ENTER){
+		    	int range = ipText.getCaretPosition() - userInputStart;
+				try {
+					String text = ipText.getText().trim();
+					text=text.substring(userInputStart, userInputStart+range);
+					System.out.println("[" + text + "]");
+					userInputStart += range;
+					if (!cmd.isRunning()) {
+						cmd.execute("");
+					} else {
+						try {
+							cmd.send(text + "\n");
+						} catch (IOException ex) {
+							appendTextValue("!! Failed to send command to process: " + ex.getMessage() + "\n");
+						}
+					}
+				} catch (Exception ex) {
+					Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+				}
+		    }
+		});
     }
     
     
@@ -100,7 +124,7 @@ public class Controller{
     @FXML
     private void close(ActionEvent event) throws IOException {
         if(isSaved()){
-            InitController.getStage().close();
+            InitController.close();
         }
         else{
             saveAsFile();
@@ -128,6 +152,7 @@ public class Controller{
         if(flag)
         	runOptions = " -S "+runOptions;
         System.out.println("Running..."+runOptions);
+        ipText.clear();
         _runCode(a,runOptions);
     }
     
@@ -175,77 +200,104 @@ public class Controller{
     }
 
     private void _runCode(String Code,  String attachedCode) throws IOException {
-        String Location= _saveTempFile(Code);
-        Runtime runtime = Runtime.getRuntime();
-        ProcessBuilder builder = new ProcessBuilder();
-        //builder.command("cmd.exe", "/c", a);
-        //builder.command("cmd.exe", "/c", "cd"+Location+" && dir & java out.java"); // executing commands of gcc
-        final String os = System.getProperty("os.name").toLowerCase();
-        if(os.indexOf("win") >= 0)
-        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
-        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
-        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
-        builder.redirectErrorStream(true);
-        try {
-            Process p = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            String line;
-            String res = "";
-            while (true) {
-                line = r.readLine();
-                if (line == null) {
-                    break;
-                }
-                System.out.println(line);
-                res= res+"\n"+ line;
-
-            }
-            if(res.contains(" error"))
-            {
-                ipText.setStyle("-fx-text-inner-color: red;");
-                ipText.setText(res);
-            }
-            else if(res.contains(" warning")) {
-            	ipText.setStyle("-fx-text-inner-color: pink;");
-                ipText.setText(res);
-            }
-            else{
-                ipText.setStyle("-fx-text-inner-color: green;");
-                ipText.setText(res);
-            }
-
-
-        } catch (Exception e1) {
-        	
-            e1.printStackTrace();
-        }
+//        String Location= _saveTempFile(Code);
+//        Runtime runtime = Runtime.getRuntime();
+//        ProcessBuilder builder = new ProcessBuilder();
+//        //builder.command("cmd.exe", "/c", a);
+//        //builder.command("cmd.exe", "/c", "cd"+Location+" && dir & java out.java"); // executing commands of gcc
+//        final String os = System.getProperty("os.name").toLowerCase();
+//        if(os.indexOf("win") >= 0)
+//        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
+//        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
+//        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
+//        builder.redirectErrorStream(true);
+//        try {
+//            Process p = builder.start();
+//            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//            String line;
+//            String res = "";
+//            while (true) {
+//                line = r.readLine();
+//                if (line == null) {
+//                    break;
+//                }
+//                System.out.println(line);
+//                res= res+"\n"+ line;
+//
+//            }
+//            if(res.contains(" error"))
+//            {
+//                ipText.setStyle("-fx-text-inner-color: red;");
+//                ipText.setText(res);
+//            }
+//            else if(res.contains(" warning")) {
+//            	ipText.setStyle("-fx-text-inner-color: pink;");
+//                ipText.setText(res);
+//            }
+//            else{
+//                ipText.setStyle("-fx-text-inner-color: green;");
+//                ipText.setText(res);
+//            }
+//
+//
+//        } catch (Exception e1) {
+//        	
+//            e1.printStackTrace();
+//        }
+    	
+    	if (!cmd.isRunning()) {
+			cmd.execute(attachedCode);
+		} else {
+			try {
+				cmd.send("" + "\n");
+			} catch (IOException ex) {
+				appendTextValue("!! Failed to send command to process: " + ex.getMessage() + "\n");
+			}
+		}
     }
 
+    /**
+     * action handler for run button on the debug dialogue
+     * @param event
+     * @throws IOException
+     */
     @FXML
-    private void debugCMD(ActionEvent event) throws IOException {
-        event.consume();
-        System.out.println("Debug Method");
-        String a= opText.getText();
-        System.out.println(a);
-        String attachedCode= DebugText.getText();
-        _runCode(a,attachedCode);
+    public void debugCMD(String attachedCode) throws IOException {
+//        event.consume();
+//        System.out.println("Debug Method");
+//        String a= opText.getText();
+//        System.out.println(a);
+//        String attachedCode= DebugText.getText();
+//        _runCode(a,attachedCode);
+    	
+    	String a = opText.getText();
+    	System.out.println(a);
+    	_runCode(a,attachedCode);
+    	
     }
     
+    /**
+     * action handler for debug button
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void debug(ActionEvent event) throws IOException {
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        Stage primaryStage=new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("DebugDialog.fxml"));
-        primaryStage.setTitle("Debug");
+
+        
+        event.consume();
+    	
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("DebugDialog.fxml"));
+    	Parent root = loader.load();
+        fileController oController = (fileController)loader.getController();
+        oController.setGoBack(this);
+    	Stage primaryStage = Main.getStage();
+    	primaryStage.setTitle("Debug");
+        primaryStage.setScene(new Scene(root, 405, 124));
         primaryStage.setResizable(false);
-        dialog.initOwner(primaryStage);
-        dialog.setTitle("Debug");
-        dialog.setResizable(false);
-        Scene dialogScene = new Scene(root, 405, 124);
-        dialog.setScene(dialogScene);
-        dialog.show();
+        primaryStage.setMaximized(false);
+        primaryStage.show();
 
     }
     
@@ -299,6 +351,7 @@ public class Controller{
 
         if (file != null) {
             saveTextToFile(opText.getText(), file);
+            System.out.println("Should display success label");
             this.onSuccess();
             return msg;
         }
@@ -312,7 +365,6 @@ public class Controller{
     private void saveFile() throws IOException {
         if(!isSaved()){
             FileChooser fileChooser = new FileChooser();
-            String msg="Success";
             //Set extension filter for text files
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CPP files (*.cpp)", "*.cpp");
             FileChooser.ExtensionFilter extFilter2 = new FileChooser.ExtensionFilter("C files (*.c)", "*.c");
@@ -322,6 +374,7 @@ public class Controller{
             File file = fileChooser.showSaveDialog(primaryStage);
             InitController.getStage().setTitle(file.toString()+"  - SmartGCC");
             if (file != null) {
+                System.out.println("Should display success label");
                 saveTextToFile(opText.getText(), file);
                 this.onSuccess();
             }
@@ -373,7 +426,39 @@ public class Controller{
         }
         return stringBuffer.toString();
     }
-
+/**
+ * action handler for File->new
+ * opens a new window from start
+ * @param event
+ * @throws IOException
+ */
+    @FXML
+    public void newFile(ActionEvent event) throws IOException{
+    	event.consume();
+    	this.saveFile();
+    	
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("newFilePrompt.fxml"));
+    	Parent root = loader.load();
+        fileController oController = (fileController)loader.getController();
+        oController.setGoBack(this);
+    	Stage primaryStage = Main.getStage();
+    	primaryStage.setTitle("New file");
+        primaryStage.setScene(new Scene(root, 640, 350));
+        primaryStage.setResizable(false);
+        primaryStage.setMaximized(false);
+        primaryStage.show();
+    }
+    
+    public void openNewFile() throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
+    	Parent root = loader.load();
+        Stage primaryStage = Main.getStage();
+    	primaryStage.setTitle("Smart Gcc");
+        primaryStage.setScene(new Scene(root, 640, 350));
+        primaryStage.setResizable(false);
+        primaryStage.setMaximized(false);
+        primaryStage.show();
+    }
     
 
     @FXML
@@ -381,7 +466,10 @@ public class Controller{
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         Stage primaryStage=new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("SuccessDialog.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("successDialogue.fxml"));
+        Parent root = loader.load();
+        fileController oController = (fileController) loader.getController();
+        oController.setGoBack(this);
         primaryStage.setTitle("Success");
         primaryStage.setResizable(false);
         dialog.initOwner(primaryStage);
@@ -399,7 +487,10 @@ public class Controller{
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         Stage primaryStage=new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("ErrorDialog.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("errorDialogue.fxml"));
+        Parent root = loader.load();
+        fileController oController = (fileController) loader.getController();
+        oController.setGoBack(this);
         primaryStage.setTitle("Error");
         primaryStage.setResizable(false);
         dialog.initOwner(primaryStage);
@@ -443,26 +534,7 @@ public class Controller{
         //return userMode;
     }
     
-    /**
-     * resets the fields whose IDs are passed as a space separated string in userData of the button
-     * the userData attribute in xml MUST follow the format as shown in addDevOptionDialogue.fxml:line17:userData
-     * the text fields to be resetted MUST share the same scene as this button
-     * @param event -- button whose onAction has trigerred this method. MUST be a button or any child of class Node
-     * @throws IOException 
-     */
-    @FXML
-    public void resetFields(ActionEvent event) throws IOException{
-    	event.consume();
-    	String data = (String) ((Node)event.getSource()).getUserData();
-    	System.out.println("Resetting text fields: "+ data);
-    	String[] textFieldIDs = data.split(" ");
-    	Scene scene = ((Node)event.getSource()).getScene();
-    	for(String id : textFieldIDs) {
-    		TextField tf = (TextField)scene.lookup("#"+id);
-    		tf.clear();
-    	}
-    	
-    }
+    
 
     /**
      * make all options visible before setting some off
@@ -532,8 +604,125 @@ public class Controller{
 		opt4.setSelected(false);
 		opt5.setSelected(false);
 	}
+	@Override
+	public int getUserInputStart() {
+		// TODO Auto-generated method stub
+		return userInputStart;
+	}
+	@Override
+	public void appendTextValue(String text) {
+		// TODO Auto-generated method stub
+		ipText.appendText(text);
+		updateUserInputPos();
+	}
+	@Override
+	public void commandOutput(String text) {
+		// TODO Auto-generated method stub
+		if(text.contains(" error"))
+        {
+            ipText.setStyle("-fx-text-inner-color: red;");
+        }
+        else if(text.contains(" warning")) {
+        	ipText.setStyle("-fx-text-inner-color: pink;");
+        }
+        else{
+            ipText.setStyle("-fx-text-inner-color: green;");
+        }
+
+		SwingUtilities.invokeLater(new AppendTask(this, text));
+		
+	}
+	@Override
+	public void commandFailed(Exception exp) {
+		// TODO Auto-generated method stub
+		SwingUtilities.invokeLater(new AppendTask(this, "Command failed - " + exp.getMessage()));
+		
+	}
+	
+	protected void updateUserInputPos() {
+		int pos = ipText.getCaretPosition();
+		ipText.selectPositionCaret(ipText.getText().length());
+		userInputStart = pos;
+
+	}
+	
+	public TextArea getOpText() {
+		return opText;
+	}
+
+	public void setOpText(TextArea opText) {
+		this.opText = opText;
+	}
+
+	public TextArea getIpText() {
+		return ipText;
+	}
+
+	public void setIpText(TextArea ipText) {
+		this.ipText = ipText;
+	}
 
 
+}
+
+class ProcessRunner extends Thread {
+
+	private Controller listener;
+	private String attachedCode;
+
+	private Process process;
+
+	public ProcessRunner(Controller listener, String attachedCode) {
+		this.listener = listener;
+		this.attachedCode = attachedCode;
+		start();
+	}
+
+	@Override
+	public void run() {
+		try {
+			 String code= listener.getOpText().getText();
+			 String Location= listener._saveTempFile(code);
+//			 String attachedCode= "";
+		        ProcessBuilder builder = new ProcessBuilder();
+		        final String os = System.getProperty("os.name").toLowerCase();
+		        if(os.indexOf("win") >= 0)
+		        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
+		        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
+		        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
+		        builder.redirectErrorStream(true);
+			
+		             process = builder.start();
+		            StreamReader reader = new StreamReader(listener, process.getInputStream());
+		            BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		            String line;
+		            String res = "";
+		            int result = process.waitFor();
+		            reader.join();
+//		            while (true) {
+//		                line = r.readLine();
+//		                if (line == null) {
+//		                    break;
+//		                }
+//		                System.out.println(line);
+//		                res= res+"\n"+ line;
+//
+//		            }
+		            
+		        }
+		        catch (Exception exp) {
+					exp.printStackTrace();
+					listener.commandFailed(exp);
+				}
+			// Need a stream writer...
+	}
+
+	public void write(String text) throws IOException {
+		if (process != null && process.isAlive()) {
+			process.getOutputStream().write(text.getBytes());
+			process.getOutputStream().flush();
+		}
+	}
 }
 
 

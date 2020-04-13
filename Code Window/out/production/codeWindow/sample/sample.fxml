@@ -24,7 +24,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="New"  />
+                        <MenuItem mnemonicParsing="false" text="New"  onAction="#newFile"/>
                         <MenuItem mnemonicParsing="false" onAction="#fileInput" text="Open…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Save" onAction="#saveFile" />
@@ -32,7 +32,7 @@
                         <MenuItem mnemonicParsing="false" text="Close" onAction="#close"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <!--<Menu mnemonicParsing="false" text="Edit">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Undo" />
                         <MenuItem mnemonicParsing="false" text="Redo" />
@@ -45,7 +45,7 @@
                         <MenuItem mnemonicParsing="false" text="Select All" />
                         <MenuItem mnemonicParsing="false" text="Unselect All" />
                     </items>
-                </Menu>
+                </Menu>-->
                 <Menu mnemonicParsing="false" text="Options">
                     <items>
                   <Menu fx:id="linkCode" mnemonicParsing="false" text="Linking options">

@@ -20,10 +20,14 @@ public class InitController {
     @FXML
     public Button closeButton;
 
-    private static Stage stage=new Stage();
+    private static Stage stage=new Stage();	//has to remain static to let changeUserType work
     public static Stage getStage() { return stage; }
     
-
+/**
+ * loads novice screen with default options for novice
+ * @param event
+ * @throws IOException
+ */
     @FXML
     private void startSceneNovice(ActionEvent event) throws IOException {
         event.consume();
@@ -59,7 +63,12 @@ public class InitController {
         primaryStage.setTitle(newLabel);
 
     }
-
+    
+    /**
+     * loads typical screen with default options for typical
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void startSceneTypical(ActionEvent event) throws IOException {
     	event.consume();
@@ -85,7 +94,12 @@ public class InitController {
         primaryStage.show();
 
     }
-
+    
+    /**
+     * loads expert screen with default options for expert
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void startSceneExpert(ActionEvent event) throws IOException {
     	event.consume();
@@ -111,6 +125,13 @@ public class InitController {
 
 
     }
+
+	public static void close() {
+		// TODO Auto-generated method stub
+		
+		stage.close();
+		
+	}
 
 
 }
