@@ -2,6 +2,7 @@ package sample;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 //import java.awt.*;
 import javafx.fxml.FXMLLoader;
@@ -9,9 +10,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 import java.io.*;
@@ -58,10 +62,7 @@ public class Controller{
     	
     }
     
-    
-    
-	
-    
+
     @FXML
     public boolean isSaved() throws IOException {
       if(InitController.getStage().getTitle() == "FileName.cpp - Smart Gcc")
@@ -69,7 +70,7 @@ public class Controller{
       return true;
     }
     @FXML
-    private void close(ActionEvent event) throws IOException {
+    public void close(ActionEvent event) throws IOException {
         if(isSaved()){
             InitController.getStage().close();
         }
@@ -77,6 +78,8 @@ public class Controller{
             saveAsFile();
         }
     }
+
+
     @FXML
     private void runCMD(ActionEvent event) throws IOException {
         event.consume();
@@ -185,6 +188,28 @@ public class Controller{
         dialog.show();
 
     }
+
+    @FXML
+    public void changeUtype(ActionEvent event) throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage=new Stage();
+        //Parent root = FXMLLoader.load(getClass().getResource("changeUserType.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("changeUserType.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("Change User Type Dialog");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        changeUserTypeController oController= (changeUserTypeController)loader.getController();
+        oController.setGoBack(this);
+        dialog.setTitle("Change User Type Dialog");
+        dialog.setResizable(false);
+        Scene dialogScene = new Scene(root, 596, 150);
+        //primaryStage.setScene(new Scene(root, 596, 150));
+        dialog.setScene(dialogScene);
+        dialog.show();
+
+    }
     
     public String _saveTempFile(String code) throws IOException {
         String savePath = _getPath();
@@ -219,10 +244,9 @@ public class Controller{
     }
 
     @FXML
-    private String saveAsFile() throws IOException {
+    public String saveAsFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
         String msg="Success";
-
         //Set extension filter for text files
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CPP files (*.cpp)", "*.cpp");
         FileChooser.ExtensionFilter extFilter2 = new FileChooser.ExtensionFilter("C files (*.c)", "*.c");
@@ -318,7 +342,7 @@ public class Controller{
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         Stage primaryStage=new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("SuccessDialog.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("SuccessDialogue.fxml"));
         primaryStage.setTitle("Success");
         primaryStage.setResizable(false);
         dialog.initOwner(primaryStage);
@@ -336,7 +360,7 @@ public class Controller{
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         Stage primaryStage=new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("ErrorDialog.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("ErrorDialogue.fxml"));
         primaryStage.setTitle("Error");
         primaryStage.setResizable(false);
         dialog.initOwner(primaryStage);
@@ -355,11 +379,14 @@ public class Controller{
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("changeUserType.fxml"));
         Parent root = loader.load();
         Stage primaryStage= new Stage();
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.showAndWait();
         changeUserTypeController oController= (changeUserTypeController)loader.getController();
         oController.setGoBack(this);
-        
+       // primaryStage.initModality(Modality.APPLICATION_MODAL);
+      //  primaryStage.showAndWait();
         primaryStage.setTitle("Change User Type");
-        primaryStage.setScene(new Scene(root, 640, 350));
+        primaryStage.setScene(new Scene(root, 596, 150));
         primaryStage.setResizable(false);
         primaryStage.setMaximized(false);
         primaryStage.show();
@@ -430,7 +457,34 @@ public class Controller{
 		}
 	}
 
+	@FXML ChoiceBox cbx;
+	@FXML AnchorPane aPaneMain;
+	@FXML Label outputLabel;
+	@FXML Label themeLabel;
 
+    @FXML
+    public void themechange(ActionEvent actionEvent) {
+        System.out.println(cbx.getValue());
+        if(cbx.getValue()=="Light");
+        {
+            System.out.println("Color Changed for: "+cbx.getValue());
+            aPaneMain.setStyle("-fx-background-color:#ffffff");
+            outputLabel.setTextFill(Color.web("#000000"));
+            themeLabel.setTextFill(Color.web("#000000"));
+
+        }
+
+        if(cbx.getValue()=="Dark");
+        {
+            System.out.println("Color Changed for: "+cbx.getValue());
+            aPaneMain.setStyle("-fx-background-color:#33302F");
+            outputLabel.setTextFill(Color.web("#ffffff"));
+            themeLabel.setTextFill(Color.web("#ffffff"));
+
+        }
+
+
+    }
 }
 
 

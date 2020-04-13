@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+
 import java.io.*;
 
 //import java.awt.*;
@@ -16,70 +21,145 @@ import java.io.*;
 
 public class InitController {
 
-    @FXML TextArea opText;
+    @FXML
+    TextArea opText;
     @FXML
     public Button closeButton;
 
-    private static Stage stage=new Stage();
-    public static Stage getStage() { return stage; }
-    
+    private static Stage stage = new Stage();
+
+    public static Stage getStage() {
+        return stage;
+    }
+
 
     @FXML
     private void startSceneNovice(ActionEvent event) throws IOException {
         event.consume();
-        
+
         System.out.println("Hello Novice");
-        
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
-        Controller oController= (Controller)loader.getController();
-        Stage primaryStage= getStage();
-        
+        Controller oController = (Controller) loader.getController();
+        Stage primaryStage = getStage();
+
         oController.makeAllVisible();
         oController.devOptionsMenu.setVisible(false);
         oController.generateCode.setVisible(false);
         oController.optimizeCode.setVisible(false);
-        
-        Stage stage = (Stage)closeButton.getScene().getWindow();
+
+        Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
-        
+
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        // primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.setOnCloseRequest(event1 -> {
+            event1.consume();
+            System.out.println("Close Clicked");
+            Controller con = new Controller();
+
+            try {
+                if (con.isSaved()) {
+                    InitController.getStage().close();
+
+                } else {
+                    askIfSaveWanted();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
-        
-        
+
 
     }
 
     @FXML
-    public void setTitle(String newLabel)
-    {
-        Stage primaryStage =new Stage();
+    public void askIfSaveWanted() throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("CloseDialogue.fxml"));
+        primaryStage.setTitle("Debug");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        dialog.setTitle("Debug");
+        dialog.setResizable(false);
+        Scene dialogScene = new Scene(root, 405, 124);
+        dialog.setScene(dialogScene);
+        dialog.show();
+
+    }
+
+    @FXML
+    Button saveyes;
+
+    @FXML
+    public void clickedonSave(ActionEvent event) throws IOException {
+        Controller con = new Controller();
+        con.saveAsFile();
+        InitController.getStage().close();
+        Stage stage = (Stage) saveno.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    Button saveno;
+
+    @FXML
+    public void clickedonNoSave(ActionEvent event) throws IOException {
+        InitController.getStage().close();
+        Stage stage = (Stage) saveno.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    public void setTitle(String newLabel) {
+        Stage primaryStage = new Stage();
         primaryStage.setTitle(newLabel);
 
     }
 
     @FXML
     private void startSceneTypical(ActionEvent event) throws IOException {
-    	event.consume();
-        
+        event.consume();
+
         System.out.println("Hello Typical");
-        
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
-        Controller oController= (Controller)loader.getController();
-        Stage primaryStage= getStage();
-        
+        Controller oController = (Controller) loader.getController();
+        Stage primaryStage = getStage();
+
         oController.makeAllVisible();
         oController.devOptionsMenu.setVisible(false);
         oController.allOptionsGenerateCode.setVisible(false);
         oController.allOptionsOptimizeCode.setVisible(false);
-        
-        Stage stage = (Stage)closeButton.getScene().getWindow();
+
+        Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
-        
+
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        primaryStage.setOnCloseRequest(event1 -> {
+            event1.consume();
+            System.out.println("Close Clicked");
+            Controller con = new Controller();
+
+            try {
+                if (con.isSaved()) {
+                    InitController.getStage().close();
+
+                } else {
+                    askIfSaveWanted();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        //primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
@@ -88,26 +168,42 @@ public class InitController {
 
     @FXML
     private void startSceneExpert(ActionEvent event) throws IOException {
-    	event.consume();
-        
+        event.consume();
+
         System.out.println("Hello Novice");
-        
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
-        Controller oController= (Controller)loader.getController();
-        Stage primaryStage= getStage();
-        
+        Controller oController = (Controller) loader.getController();
+        Stage primaryStage = getStage();
+
         oController.makeAllVisible();
         oController.allOptions.setVisible(false);
-        
-        Stage stage = (Stage)closeButton.getScene().getWindow();
+
+        Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
-        
+
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        primaryStage.setOnCloseRequest(event1 -> {
+            event1.consume();
+            System.out.println("Close Clicked");
+            Controller con = new Controller();
+
+            try {
+                if (con.isSaved()) {
+                    InitController.getStage().close();
+
+                } else {
+                    askIfSaveWanted();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        //primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
-
 
 
     }
