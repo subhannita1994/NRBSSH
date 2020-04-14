@@ -34,5 +34,6 @@
 		</ImageView>
       <Separator layoutX="326.0" layoutY="22.0" prefHeight="4.0" prefWidth="233.0" />
       <Label layoutX="569.0" layoutY="15.0" text="DETAILS" textFill="WHITE" />
+      <Button layoutX="526.0" layoutY="300.0" text="Cancel" onAction="#cancel" />
    </children>
 </AnchorPane>

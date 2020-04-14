@@ -50,6 +50,12 @@ public class changeUserTypeController {
 		this.oController = controller;
 		System.out.println("controller set");
 	}
+	
+	@FXML
+	public void cancel(ActionEvent event) throws IOException{
+		Stage stage = (Stage)closeButtonChangeUserType.getScene().getWindow();
+        stage.close();
+	}
 
 	@FXML
     private void settingUserPreference( Controller oController) throws IOException {

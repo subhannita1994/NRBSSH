@@ -66,5 +66,12 @@ public class fileController {
 
 		this.oController.debugCMD(textField.getText());
     }
+    
+    @FXML
+    public void cancel(ActionEvent event) throws IOException{
+    	event.consume();
+    	Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+        stage.close();
+    }
 
 }
