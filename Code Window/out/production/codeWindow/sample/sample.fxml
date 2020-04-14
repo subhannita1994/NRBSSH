@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="1800.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<VBox prefHeight="1800.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
         <MenuBar VBox.vgrow="ALWAYS">
             <menus>
@@ -21,17 +22,19 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Format Code">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Type 1" onAction="#format1"/>
-                        <MenuItem mnemonicParsing="false" text="Type 2" onAction="#format2"/>
+                        <MenuItem mnemonicParsing="false" onAction="#format1" text="Type 1" />
+                        <MenuItem mnemonicParsing="false" onAction="#format2" text="Type 2" />
 
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Options">
                     <items>
                   <Menu fx:id="linkCode" mnemonicParsing="false" text="Linking options">
-                  		<CheckMenuItem fx:id="link1" mnemonicParsing="false" onAction="#checkOption" text="Do not use standard system startup files" />
-                        <CheckMenuItem fx:id="link2" mnemonicParsing="false" onAction="#checkOption" text="Partial linking" />
-                        <CheckMenuItem fx:id="link3" mnemonicParsing="false" onAction="#checkOption" text="Link to GNU CC statically" />
+                     <items>
+                     		<CheckMenuItem fx:id="link1" mnemonicParsing="false" onAction="#checkOption" text="Do not use standard system startup files" />
+                           <CheckMenuItem fx:id="link2" mnemonicParsing="false" onAction="#checkOption" text="Partial linking" />
+                           <CheckMenuItem fx:id="link3" mnemonicParsing="false" onAction="#checkOption" text="Link to GNU CC statically" />
+                     </items>
                   </Menu>  
                   <Menu fx:id="optimizeCode" mnemonicParsing="false" text="Optimize Code">
                   <!--<fx:define>
@@ -49,9 +52,11 @@
                   </items> 
                   </Menu>
                   <Menu fx:id="generateCode" mnemonicParsing="false" text="Generate Code">
-                  		<CheckMenuItem fx:id="gen1" mnemonicParsing="false" onAction="#checkOption" text="Insert comments in assembly code" />
-                        <CheckMenuItem fx:id="gen2" mnemonicParsing="false" onAction="#checkOption" text="Enable exception handling" />
-                        <CheckMenuItem fx:id="gen3" mnemonicParsing="false" onAction="#checkOption" text="Allocate optimum memory to enum type" />
+                     <items>
+                     		<CheckMenuItem fx:id="gen1" mnemonicParsing="false" onAction="#checkOption" text="Insert comments in assembly code" />
+                           <CheckMenuItem fx:id="gen2" mnemonicParsing="false" onAction="#checkOption" text="Enable exception handling" />
+                           <CheckMenuItem fx:id="gen3" mnemonicParsing="false" onAction="#checkOption" text="Allocate optimum memory to enum type" />
+                     </items>
                   </Menu>
                   <MenuItem fx:id="changeUserType" mnemonicParsing="false" onAction="#changeUserTypeDialog" text="Change User Type" />
                   <Menu fx:id="allOptions" mnemonicParsing="false" text="All options">
@@ -65,10 +70,12 @@
                     </items>
                 </Menu>
                 <Menu fx:id="devOptionsMenu" mnemonicParsing="false" text="Developer Options">
-                    
-                        <CheckMenuItem fx:id="dev1" mnemonicParsing="false" onAction="#checkOption" text="Display time statistics" />
-                        <CheckMenuItem fx:id="dev2" mnemonicParsing="false" onAction="#checkOption" text="Display installation directory" />
-                        <CheckMenuItem fx:id="dev3" mnemonicParsing="false" onAction="#checkOption" text="Store temporary intermediate files" />
+                   <items>
+                       
+                           <CheckMenuItem fx:id="dev1" mnemonicParsing="false" onAction="#checkOption" text="Display time statistics" />
+                           <CheckMenuItem fx:id="dev2" mnemonicParsing="false" onAction="#checkOption" text="Display installation directory" />
+                           <CheckMenuItem fx:id="dev3" mnemonicParsing="false" onAction="#checkOption" text="Store temporary intermediate files" />
+                   </items>
                     
                 </Menu>
             </menus>
@@ -90,11 +97,14 @@
             <children>
             <AnchorPane layoutX="12.0" layoutY="6.0" prefHeight="40.0" prefWidth="826.0" style="-fx-background-color: #33302F;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Button layoutX="768.0" layoutY="8.0" mnemonicParsing="false" onAction="#debug" style="-fx-background-color: #531B2B;" text="Debug" textFill="WHITE">
+                  <Button layoutX="419.0" layoutY="9.0" mnemonicParsing="false" onAction="#debug" prefHeight="32.0" prefWidth="66.0" style="-fx-background-color: #531B2B;" text="Debug" textFill="WHITE">
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font></Button>
-                  <Button layoutX="718.0" layoutY="8.0" mnemonicParsing="false" onAction="#runCMD" style="-fx-background-color: #427B43;" text="Run" textFill="WHITE" />
+                  <Button layoutX="362.0" layoutY="9.0" mnemonicParsing="false" onAction="#runCMD" style="-fx-background-color: #427B43;" text="Run" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Button>
                   <!--<Label layoutX="486.0" layoutY="12.0" text="User Mode:" />
                   <ComboBox layoutX="554.0" layoutY="8.0" prefWidth="150.0" />-->
                   <Label layoutX="22.0" layoutY="12.0" text="Enter Input Code Below" textFill="WHITE" />
@@ -117,7 +127,7 @@
                      <GridPane.margin>
                         <Insets bottom="20.0" />
                      </GridPane.margin></TextArea>
-                  <Label prefHeight="17.0" prefWidth="43.0" text="Output" textFill="WHITE" GridPane.rowIndex="1" />
+                  <Label prefHeight="21.0" prefWidth="103.0" text="Output:" textFill="WHITE" GridPane.rowIndex="1" />
 
                     </children>
                 </GridPane>

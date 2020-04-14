@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 
 <AnchorPane prefHeight="335.0" prefWidth="640.0" style="-fx-background-color: #39383D;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.changeUserTypeController">
    <children>
@@ -26,7 +27,11 @@
             <Font name="System Bold" size="12.0" />
          </font></Button>
       <Separator layoutX="307.0" layoutY="67.0" orientation="VERTICAL" prefHeight="241.0" prefWidth="2.0" />
-      <TextArea editable="false" layoutX="326.0" layoutY="37.0" prefHeight="269.0" prefWidth="287.0" />
+      <ImageView fx:id="imgPicture" fitHeight="225.0" fitWidth="298.0" layoutX="326.0" layoutY="65.0" preserveRatio="true">
+		    <image>
+		        <Image url="file:/D:/Git%20Projects/NRBSSH/images/barchart.PNG" />
+		    </image>
+		</ImageView>
       <Separator layoutX="326.0" layoutY="22.0" prefHeight="4.0" prefWidth="233.0" />
       <Label layoutX="569.0" layoutY="15.0" text="DETAILS" textFill="WHITE" />
    </children>
