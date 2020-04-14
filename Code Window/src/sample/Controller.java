@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 import java.io.*;
@@ -65,7 +66,7 @@ public class Controller implements CommandListener, Terminal{
      *
      */
     public Controller() {
-    	options.put("dev1", "-ftime-report");// g++ -ftime-report out.cpp -o -
+    	options.put("dev1", "-dumpmachine");// g++ -ftime-report out.cpp -o -
     	options.put("dev2","-print-search-dirs");//g++ -print-search-dirs out.cpp -o -
     	options.put("dev3", "-save-temps"); //g++ -save-temps out.cpp -o -
 //        options.put("dev1", "-fno-dollars-in-identifiers"); 
@@ -82,12 +83,71 @@ public class Controller implements CommandListener, Terminal{
         options.put("gen1", "-fverbose-asm");//g++ -S  out.cpp -fverbose-asm -o -
         options.put("gen2", "-fexceptions"); //g++ -S  out.cpp -fexceptions -o -
         options.put("gen3", "-fshort-enums"); //g++ -S  out.cpp -fshort-enums -o -
+
+        InitController.getStage().setOnCloseRequest(event1 -> {
+            event1.consume();
+            System.out.println("Close Clicked");
+
+            try {
+                if (isSaved()) {
+                    InitController.getStage().close();
+
+                } else {
+                    //askIfSaveWanted();
+                    System.out.println(";jhgsss");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         
         cmd = new Command(this);
       
     }
+
     @FXML
-    public void initialize() {
+    Button saveyes;
+    @FXML
+    public void clickedonSave(ActionEvent event) throws IOException {
+        Controller con = new Controller();
+        con.saveAsFile();
+        InitController.getStage().close();
+        Stage stage = (Stage) saveno.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    Button saveno;
+
+    @FXML
+    public void clickedonNoSave(ActionEvent event) throws IOException {
+        InitController.getStage().close();
+        Stage stage = (Stage) saveno.getScene().getWindow();
+        stage.close();
+    }
+
+
+    @FXML
+    public void askIfSaveWanted() throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("CloseDialogue.fxml"));
+        primaryStage.setTitle("Debug");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        dialog.setTitle("Debug");
+        dialog.setResizable(false);
+        Scene dialogScene = new Scene(root, 405, 124);
+        dialog.setScene(dialogScene);
+        dialog.show();
+
+    }
+
+
+    @FXML
+    public void initialize() { //try
+
     	ipText.setOnKeyPressed(event->{
 			if (event.getCode() == KeyCode.ENTER){
 		    	int range = ipText.getCaretPosition() - userInputStart;
@@ -107,9 +167,12 @@ public class Controller implements CommandListener, Terminal{
 					}
 				} catch (Exception ex) {
 					Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-				}
+
+                }
+
 		    }
 		});
+
     }
     
     
@@ -118,7 +181,8 @@ public class Controller implements CommandListener, Terminal{
     @FXML
     public boolean isSaved() throws IOException {
       if(InitController.getStage().getTitle() == "FileName.cpp - Smart Gcc")
-      {return false; }
+      {return false;
+      }
       return true;
     }
     @FXML
@@ -141,6 +205,7 @@ public class Controller implements CommandListener, Terminal{
         event.consume();
          String a= opText.getText();
         System.out.println(a);
+        //ipText.setEditable(true);
         String runOptions = "";
         boolean flag = false;
         for(String key : selectedOptions.keySet()) {
@@ -334,10 +399,9 @@ public class Controller implements CommandListener, Terminal{
     }
 
     @FXML
-    private String saveAsFile() throws IOException {
+    public String saveAsFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
         String msg="Success";
-
         //Set extension filter for text files
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CPP files (*.cpp)", "*.cpp");
         FileChooser.ExtensionFilter extFilter2 = new FileChooser.ExtensionFilter("C files (*.c)", "*.c");
@@ -346,8 +410,6 @@ public class Controller implements CommandListener, Terminal{
         Stage primaryStage=new Stage();
         File file = fileChooser.showSaveDialog(primaryStage);
         InitController.getStage().setTitle(file.toString()+"  - SmartGCC");
-
-
 
         if (file != null) {
             saveTextToFile(opText.getText(), file);
@@ -448,6 +510,8 @@ public class Controller implements CommandListener, Terminal{
         primaryStage.setMaximized(false);
         primaryStage.show();
     }
+
+
     
     public void openNewFile() throws IOException {
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
@@ -474,6 +538,7 @@ public class Controller implements CommandListener, Terminal{
         primaryStage.setResizable(false);
         dialog.initOwner(primaryStage);
         dialog.setTitle("Success");
+        dialog.initStyle(StageStyle.UNDECORATED);
         dialog.setResizable(false);
         //Label divider = new Label();
         Scene dialogScene = new Scene(root, 405, 124);
@@ -495,6 +560,7 @@ public class Controller implements CommandListener, Terminal{
         primaryStage.setResizable(false);
         dialog.initOwner(primaryStage);
         dialog.setTitle("Error");
+        dialog.initStyle(StageStyle.UNDECORATED);
         dialog.setResizable(false);
         //Label divider = new Label();
         Scene dialogScene = new Scene(root, 405, 124);
@@ -508,7 +574,7 @@ public class Controller implements CommandListener, Terminal{
      * @param event
      * @throws IOException
      */
-    @FXML
+   /* @FXML
     public void changeUserTypeDialog(ActionEvent event) throws IOException{
     	
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("changeUserType.fxml"));
@@ -523,6 +589,28 @@ public class Controller implements CommandListener, Terminal{
         primaryStage.setMaximized(false);
         primaryStage.show();
     	
+    }*/
+
+    @FXML
+    public void changeUserTypeDialog(ActionEvent event) throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage=new Stage();
+        //Parent root = FXMLLoader.load(getClass().getResource("changeUserType.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("changeUserType.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("Change User Type Dialog");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        changeUserTypeController oController= (changeUserTypeController)loader.getController();
+        oController.setGoBack(this);
+        dialog.setTitle("Change User Type Dialog");
+        dialog.setResizable(false);
+        Scene dialogScene = new Scene(root, 640, 350);
+        //primaryStage.setScene(new Scene(root, 596, 150));
+        dialog.setScene(dialogScene);
+        dialog.show();
+
     }
     
     
@@ -663,6 +751,30 @@ public class Controller implements CommandListener, Terminal{
 	}
 
 
+    public void format1(ActionEvent actionEvent) throws IOException {
+        CodeTab ct=new CodeTab();
+        String fname=_saveTempFile(opText.getText());
+	    ct.codeFormat(fname,1);
+	    System.out.println("Done");
+	    readfileAndSet(fname);
+
+    }
+
+    private void readfileAndSet(String fname) {
+	    String name= "\\"+"out.cpp";
+        File file = new File(fname+"\\temp.cpp");
+        if(file != null){
+            opText.setText(readFile(file));
+        }
+    }
+
+    public void format2(ActionEvent actionEvent) throws IOException {
+        CodeTab ct=new CodeTab();
+        String fname=_saveTempFile(opText.getText());
+        ct.codeFormat(fname,2);
+        System.out.println("Done");
+        readfileAndSet(fname);
+    }
 }
 
 class ProcessRunner extends Thread {
@@ -687,7 +799,7 @@ class ProcessRunner extends Thread {
 		        ProcessBuilder builder = new ProcessBuilder();
 		        final String os = System.getProperty("os.name").toLowerCase();
 		        if(os.indexOf("win") >= 0)
-		        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
+		        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp  & .\\program"); // executing commands of gcc
 		        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
 		        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
 		        builder.redirectErrorStream(true);

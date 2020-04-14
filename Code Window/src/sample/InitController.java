@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.*;
 
@@ -48,6 +48,22 @@ public class InitController {
         stage.close();
         
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        primaryStage.setOnCloseRequest(event1 -> {
+            event1.consume();
+            System.out.println("Close Clicked");
+            Controller con = new Controller();
+
+            try {
+                if (con.isSaved()) {
+                    InitController.getStage().close();
+
+                } else {
+                    askIfSaveWanted();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
@@ -89,6 +105,22 @@ public class InitController {
         stage.close();
         
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        primaryStage.setOnCloseRequest(event1 -> {
+            event1.consume();
+            System.out.println("Close Clicked");
+            Controller con = new Controller();
+
+            try {
+                if (con.isSaved()) {
+                    InitController.getStage().close();
+
+                } else {
+                    askIfSaveWanted();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
@@ -118,11 +150,66 @@ public class InitController {
         stage.close();
         
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
+        primaryStage.setOnCloseRequest(event1 -> {
+            event1.consume();
+            System.out.println("Close Clicked");
+            Controller con = new Controller();
+
+            try {
+                if (con.isSaved()) {
+                    InitController.getStage().close();
+
+                } else {
+                    askIfSaveWanted();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
 
 
+
+    }
+
+    @FXML
+    Button saveyes;
+    @FXML
+    public void clickedonSave(ActionEvent event) throws IOException {
+        Controller con = new Controller();
+        con.saveAsFile();
+        InitController.getStage().close();
+        Stage stage = (Stage) saveno.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    Button saveno;
+
+    @FXML
+    public void clickedonNoSave(ActionEvent event) throws IOException {
+        InitController.getStage().close();
+        Stage stage = (Stage) saveno.getScene().getWindow();
+        stage.close();
+    }
+
+
+    @FXML
+    public void askIfSaveWanted() throws IOException {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        Stage primaryStage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("CloseDialogue.fxml"));
+        primaryStage.setTitle("Debug");
+        primaryStage.setResizable(false);
+        dialog.initOwner(primaryStage);
+        dialog.setTitle("Debug");
+        dialog.setResizable(false);
+        Scene dialogScene = new Scene(root, 405, 124);
+        dialog.setScene(dialogScene);
+        dialog.show();
 
     }
 
