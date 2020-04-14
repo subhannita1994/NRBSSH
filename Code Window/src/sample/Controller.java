@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 //import java.awt.*;
@@ -26,6 +27,8 @@ import javax.swing.SwingUtilities;
 
 public class Controller implements CommandListener, Terminal{
 
+	@FXML
+	Label userMode;
     @FXML
     TextArea opText;
     @FXML
@@ -86,8 +89,57 @@ public class Controller implements CommandListener, Terminal{
 
         cmd = new Command(this);
       
+        
+    }
+    
+
+    @FXML
+    public void initialize() { 
+    	
+
+
+    	ipText.setOnKeyPressed(event->{
+			if (event.getCode() == KeyCode.ENTER){
+		    	int range = ipText.getCaretPosition() - userInputStart;
+				try {
+					String text = ipText.getText().trim();
+					text=text.substring(userInputStart, userInputStart+range);
+					System.out.println("[" + text + "]");
+					userInputStart += range;
+					if (!cmd.isRunning()) {
+						cmd.execute("");
+					} else {
+						try {
+							cmd.send(text + "\n");
+						} catch (IOException ex) {
+							appendTextValue("!! Failed to send command to process: " + ex.getMessage() + "\n");
+						}
+					}
+				} catch (Exception ex) {
+					Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+
+                }
+
+		    }
+		});
+
+    }
+    
+   
+    
+    
+    /**
+     * sets the userMode label
+     * @param label
+     */
+    @FXML
+    public void setUserMode(String label) {
+    	this.userMode.setText(label);
     }
 
+    /**
+     * save methods
+     */
     @FXML
     Button saveyes;
     @FXML
@@ -128,182 +180,6 @@ public class Controller implements CommandListener, Terminal{
     }
 
 
-    @FXML
-    public void initialize() { //try
-
-    	ipText.setOnKeyPressed(event->{
-			if (event.getCode() == KeyCode.ENTER){
-		    	int range = ipText.getCaretPosition() - userInputStart;
-				try {
-					String text = ipText.getText().trim();
-					text=text.substring(userInputStart, userInputStart+range);
-					System.out.println("[" + text + "]");
-					userInputStart += range;
-					if (!cmd.isRunning()) {
-						cmd.execute("");
-					} else {
-						try {
-							cmd.send(text + "\n");
-						} catch (IOException ex) {
-							appendTextValue("!! Failed to send command to process: " + ex.getMessage() + "\n");
-						}
-					}
-				} catch (Exception ex) {
-					Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-
-                }
-
-		    }
-		});
-
-    }
-    
-    
-	
-    
-    @FXML
-    public boolean isSaved() throws IOException {
-      if(InitController.getStage().getTitle() == "FileName.cpp - Smart Gcc")
-      {return false;
-      }
-      return true;
-    }
-    @FXML
-    private void close(ActionEvent event) throws IOException {
-        if(isSaved()){
-            InitController.close();
-        }
-        else{
-            saveAsFile();
-        }
-    }
-    
-    /**
-     * runs the code: sends the run configurations to _runcode()
-     * @param event
-     * @throws IOException
-     */
-    @FXML
-    private void runCMD(ActionEvent event) throws IOException {
-        event.consume();
-         String a= opText.getText();
-        System.out.println(a);
-        //ipText.setEditable(true);
-        String runOptions = "";
-        boolean flag = false;
-        for(String key : selectedOptions.keySet()) {
-        	if(selectedOptions.get(key)==true)
-        		runOptions+= " "+options.get(key);
-        	if(key.contains("gen"))
-        		flag = true;
-        }
-        if(flag)
-        	runOptions = " -S "+runOptions;
-        System.out.println("Running..."+runOptions);
-        ipText.clear();
-        _runCode(a,runOptions);
-    }
-    
-    /**
-     * action handler when any option is selected (except anything under all options): sets the HashMap value of corresponding option to true
-     * @param event
-     * @throws IOException
-     */
-    @FXML
-    private void checkOption(ActionEvent event) throws IOException{
-    	event.consume();
-    	System.out.println("Adding options...");
-    	String id = ((MenuItem)event.getSource()).getId();
-    	if(event.getSource() instanceof RadioMenuItem) {	//its an optimization option
-    		selectedOptions.put("opt1",false);
-            selectedOptions.put("opt2",false);
-            selectedOptions.put("opt3",false);
-            selectedOptions.put("opt4",false);
-            selectedOptions.put("opt5",false);
-            selectedOptions.put(id, true);
-    	}else {	//it could be linker/code generation/ developer options
-    		Boolean checkedData = ((CheckMenuItem)event.getSource()).isSelected();
-    		selectedOptions.put(id, checkedData);
-    	}
-    }
-    
-    
-  
-    public HashMap<String, String> getOptions() {
-		return options;
-	}
-	public void setOptions(String key, String value) {
-		options.put(key, value);
-	}
-	public HashMap<String, Boolean> getSelectedOptions() {
-		return selectedOptions;
-	}
-	public void setSelectedOptions(String key, Boolean value) {
-		selectedOptions.put(key, value);
-	}
-    private String _getPath()
-    {
-        String savePath = System.getProperty("user.dir") + System.getProperty("file.separator");
-        return savePath;
-    }
-
-    private void _runCode(String Code,  String attachedCode) throws IOException {
-
-    	if (!cmd.isRunning()) {
-			cmd.execute(attachedCode);
-		} else {
-			try {
-				cmd.send("" + "\n");
-			} catch (IOException ex) {
-				appendTextValue("!! Failed to send command to process: " + ex.getMessage() + "\n");
-			}
-		}
-    }
-
-    /**
-     * action handler for run button on the debug dialogue
-     * @param event
-     * @throws IOException
-     */
-    @FXML
-    public void debugCMD(String attachedCode) throws IOException {
-//        event.consume();
-//        System.out.println("Debug Method");
-//        String a= opText.getText();
-//        System.out.println(a);
-//        String attachedCode= DebugText.getText();
-//        _runCode(a,attachedCode);
-    	
-    	String a = opText.getText();
-    	System.out.println(a);
-    	_runCode(a,attachedCode);
-    	
-    }
-    
-    /**
-     * action handler for debug button
-     * @param event
-     * @throws IOException
-     */
-    @FXML
-    public void debug(ActionEvent event) throws IOException {
-
-        
-        event.consume();
-    	
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("DebugDialog.fxml"));
-    	Parent root = loader.load();
-        fileController oController = (fileController)loader.getController();
-        oController.setGoBack(this);
-    	Stage primaryStage = Main.getStage();
-    	primaryStage.setTitle("Debug");
-        primaryStage.setScene(new Scene(root, 405, 124));
-        primaryStage.setResizable(false);
-        primaryStage.setMaximized(false);
-        primaryStage.show();
-
-    }
-    
     public String _saveTempFile(String code) throws IOException {
         String savePath = _getPath();
         File saveLocation = new File(savePath);
@@ -401,6 +277,170 @@ public class Controller implements CommandListener, Terminal{
         }
     }
 
+    
+	
+    
+    @FXML
+    public boolean isSaved() throws IOException {
+      if(InitController.getStage().getTitle() == "FileName.cpp - Smart Gcc")
+      {return false;
+      }
+      return true;
+    }
+    
+    /**
+     * action handler for file->close
+     * @param event
+     * @throws IOException
+     */
+    @FXML
+    private void close(ActionEvent event) throws IOException {
+        if(isSaved()){
+            InitController.close();
+        }
+        else{
+            saveAsFile();
+        }
+    }
+    
+    /**
+     * runs the code: sends the run configurations to _runcode()
+     * @param event
+     * @throws IOException
+     */
+    @FXML
+    private void runCMD(ActionEvent event) throws IOException {
+        event.consume();
+         String a= opText.getText();
+        System.out.println(a);
+        //ipText.setEditable(true);
+        String runOptions = "";
+        boolean flag = false;
+        for(String key : selectedOptions.keySet()) {
+        	if(selectedOptions.get(key)==true)
+        		runOptions+= " "+options.get(key);
+        	if(key.contains("gen"))
+        		flag = true;
+        }
+        if(flag)
+        	runOptions = " -S "+runOptions;
+        System.out.println("Running..."+runOptions);
+        ipText.clear();
+        _runCode(a,runOptions);
+    }
+    
+    /**
+     * action handler when any option is selected (except anything under all options): sets the HashMap value of corresponding option to true
+     * @param event
+     * @throws IOException
+     */
+    @FXML
+    private void checkOption(ActionEvent event) throws IOException{
+    	event.consume();
+    	System.out.println("Adding options...");
+    	String id = ((MenuItem)event.getSource()).getId();
+    	if(event.getSource() instanceof RadioMenuItem) {	//its an optimization option
+    		selectedOptions.put("opt1",false);
+            selectedOptions.put("opt2",false);
+            selectedOptions.put("opt3",false);
+            selectedOptions.put("opt4",false);
+            selectedOptions.put("opt5",false);
+            selectedOptions.put(id, true);
+    	}else {	//it could be linker/code generation/ developer options
+    		Boolean checkedData = ((CheckMenuItem)event.getSource()).isSelected();
+    		selectedOptions.put(id, checkedData);
+    	}
+    }
+    
+    
+  
+    public HashMap<String, String> getOptions() {
+		return options;
+	}
+	public void setOptions(String key, String value) {
+		options.put(key, value);
+	}
+	public HashMap<String, Boolean> getSelectedOptions() {
+		return selectedOptions;
+	}
+	public void setSelectedOptions(String key, Boolean value) {
+		selectedOptions.put(key, value);
+	}
+    private String _getPath()
+    {
+        String savePath = System.getProperty("user.dir") + System.getProperty("file.separator");
+        return savePath;
+    }
+
+    /**
+     * send the output text and attached options to threads
+     * @param Code
+     * @param attachedCode
+     * @throws IOException
+     */
+    private void _runCode(String Code,  String attachedCode) throws IOException {
+
+    	if (!cmd.isRunning()) {
+			cmd.execute(attachedCode);
+		} else {
+			try {
+				cmd.send("" + "\n");
+			} catch (IOException ex) {
+				appendTextValue("!! Failed to send command to process: " + ex.getMessage() + "\n");
+			}
+		}
+    }
+
+    
+    
+    /**
+     * action handler for debug button
+     * @param event
+     * @throws IOException
+     */
+    @FXML
+    public void debug(ActionEvent event) throws IOException {
+
+        
+        event.consume();
+    	
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("DebugDialog.fxml"));
+    	Parent root = loader.load();
+        fileController oController = (fileController)loader.getController();
+        oController.setGoBack(this);
+    	Stage primaryStage = Main.getStage();
+    	primaryStage.setTitle("Debug");
+        primaryStage.setScene(new Scene(root, 405, 124));
+        primaryStage.setResizable(false);
+        primaryStage.setMaximized(false);
+        primaryStage.show();
+
+    }
+    /**
+     * action handler for run button on the debug dialogue
+     * @param event
+     * @throws IOException
+     */
+    @FXML
+    public void debugCMD(String attachedCode) throws IOException {
+//        event.consume();
+//        System.out.println("Debug Method");
+//        String a= opText.getText();
+//        System.out.println(a);
+//        String attachedCode= DebugText.getText();
+//        _runCode(a,attachedCode);
+    	
+    	String a = opText.getText();
+    	System.out.println(a);
+    	_runCode(a,attachedCode);
+    	
+    }
+    
+    /**
+     * helper method to read files
+     * @param file
+     * @return
+     */
     private String readFile(File file){
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
@@ -428,7 +468,7 @@ public class Controller implements CommandListener, Terminal{
     }
 /**
  * action handler for File->new
- * opens a new window from start
+ * launches newFilePrompt
  * @param event
  * @throws IOException
  */
@@ -450,7 +490,10 @@ public class Controller implements CommandListener, Terminal{
     }
 
 
-    
+    /**
+     * called bvy fileController after user says "yes" to open new
+     * @throws IOException
+     */
     public void openNewFile() throws IOException {
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
     	Parent root = loader.load();
@@ -463,6 +506,10 @@ public class Controller implements CommandListener, Terminal{
     }
     
 
+    /**
+     * launches the success dialogue
+     * @throws IOException
+     */
     @FXML
     public void onSuccess() throws IOException {
         final Stage dialog = new Stage();
@@ -485,6 +532,10 @@ public class Controller implements CommandListener, Terminal{
 
     }
 
+    /**
+     * launches the error dialogue
+     * @throws IOException
+     */
     @FXML
     public void onError() throws IOException {
         final Stage dialog = new Stage();
@@ -507,28 +558,13 @@ public class Controller implements CommandListener, Terminal{
 
     }
 
+    
+
     /**
-     * action handler for change user type menuItem : launched the dialogue box changeUserType.fxml
+     * launches the change user type dialogue
      * @param event
      * @throws IOException
      */
-   /* @FXML
-    public void changeUserTypeDialog(ActionEvent event) throws IOException{
-    	
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("changeUserType.fxml"));
-        Parent root = loader.load();
-        Stage primaryStage= new Stage();
-        changeUserTypeController oController= (changeUserTypeController)loader.getController();
-        oController.setGoBack(this);
-        
-        primaryStage.setTitle("Change User Type");
-        primaryStage.setScene(new Scene(root, 640, 350));
-        primaryStage.setResizable(false);
-        primaryStage.setMaximized(false);
-        primaryStage.show();
-    	
-    }*/
-
     @FXML
     public void changeUserTypeDialog(ActionEvent event) throws IOException {
         final Stage dialog = new Stage();
@@ -553,7 +589,10 @@ public class Controller implements CommandListener, Terminal{
     
     
 
-    
+    /**
+     * probably defunct
+     * @param userMode
+     */
     @FXML
     public void find(String userMode){
         System.out.println(userMode);
@@ -599,6 +638,10 @@ public class Controller implements CommandListener, Terminal{
 		}
 	}
 	
+	/**
+	 * disable all options - this method is called prior to making some options visible
+	 * @param event
+	 */
 	@FXML
 	public void disableOption(ActionEvent event) {
 		event.consume();
@@ -632,6 +675,7 @@ public class Controller implements CommandListener, Terminal{
 	}
 	
 	/**
+	 * probably defunct
 	 * reset all checks against all options, i.e., configuration will now be run without any additional options until an option is selected
 	 */
 	@FXML
@@ -666,6 +710,10 @@ public class Controller implements CommandListener, Terminal{
 		opt4.setSelected(false);
 		opt5.setSelected(false);
 	}
+	
+	/**
+	 * methods needed for running code
+	 */
 	@Override
 	public int getUserInputStart() {
 		// TODO Auto-generated method stub
@@ -725,6 +773,11 @@ public class Controller implements CommandListener, Terminal{
 	}
 
 
+	/**
+	 * methods for code format
+	 * @param actionEvent
+	 * @throws IOException
+	 */
     public void format1(ActionEvent actionEvent) throws IOException {
         CodeTab ct=new CodeTab();
         String fname=_saveTempFile(opText.getText());
@@ -751,6 +804,11 @@ public class Controller implements CommandListener, Terminal{
     }
 }
 
+/**
+ * class used only for running code
+ * @author subhannitasarcar
+ *
+ */
 class ProcessRunner extends Thread {
 
 	private Controller listener;

@@ -7,9 +7,9 @@
   <children>
     <AnchorPane maxHeight="233.0" maxWidth="356.0" prefHeight="233.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
          <children>
-            <Label layoutX="73.0" layoutY="44.0" fx:id ="SuccessMsgc" prefHeight="18.0" prefWidth="500.0" text="Your work is saved. Do you really want to open a new file? It will close this window." />
+            <Label layoutX="73.0" layoutY="44.0" prefHeight="18.0" prefWidth="350.0" text="Your work is saved. Do you really want to open a new file? It will close this window."  wrapText="true"/>
             <Button layoutX="73.0" layoutY="70.0" text="Yes" fx:id="yes" onAction="#goBack" />
-            <Button layoutX="73.0" layoutY="100.0" text = "No" fx:id="no" onAction="#goBack" />
+            <Button layoutX="103.0" layoutY="70.0" text = "No" fx:id="no" onAction="#goBack" />
          </children>
     </AnchorPane>
   </children>

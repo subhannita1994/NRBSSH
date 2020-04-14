@@ -100,6 +100,7 @@
             <children>
             <AnchorPane layoutX="12.0" layoutY="6.0" prefHeight="40.0" prefWidth="826.0" style="-fx-background-color: #33302F;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
                <children>
+               	  <Label layoutX="600.0" layoutY="9.0" mnemonicParsing="false" fx:id="userMode" prefHeight="32.0" prefWidth="250.0" text="User mode: Typical" textFill = "#ffffff"/>
                   <Button layoutX="419.0" layoutY="9.0" mnemonicParsing="false" onAction="#debug" prefHeight="32.0" prefWidth="66.0" style="-fx-background-color: #531B2B;" text="Debug" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="14.0" />

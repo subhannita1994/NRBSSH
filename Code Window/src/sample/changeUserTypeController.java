@@ -31,16 +31,21 @@ public class changeUserTypeController {
         	System.out.println("user chose novice");
         	oController.devOptionsMenu.setVisible(false);
             oController.generateCode.setVisible(false);
-            oController.optimizeCode.setVisible(false);
+            oController.optimizeCode.setVisible(false);        
+            oController.setUserMode("User mode: Novice");
+
         }else if(userChoice.equals("typical")) {
         	System.out.println("user chose typical");
         	oController.devOptionsMenu.setVisible(false);
             oController.allOptionsGenerateCode.setVisible(false);
             oController.allOptionsOptimizeCode.setVisible(false);
+            oController.setUserMode("User mode: Typical");
+
         }else if(userChoice.equals("expert")) {
         	System.out.println("user chose expert");
         	oController.allOptions.setVisible(false);
-            
+            oController.setUserMode("User mode: Expert");
+
         }
         settingUserPreference(oController);
 	}

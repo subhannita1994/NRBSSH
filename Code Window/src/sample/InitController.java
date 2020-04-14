@@ -49,6 +49,8 @@ public class InitController {
         oController.generateCode.setVisible(false);
         oController.optimizeCode.setVisible(false);
         settingUserPreference(oController);
+        oController.setUserMode("User mode: Novice");
+        Main.setController(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
@@ -152,7 +154,9 @@ public class InitController {
         oController.devOptionsMenu.setVisible(false);
         oController.allOptionsGenerateCode.setVisible(false);
         oController.allOptionsOptimizeCode.setVisible(false);
+        oController.setUserMode("User mode: Typical");
         settingUserPreference(oController);
+        Main.setController(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
@@ -181,7 +185,8 @@ public class InitController {
         
         oController.makeAllVisible();
         oController.allOptions.setVisible(false);
-        
+        oController.setUserMode("User mode: Expert");
+        Main.setController(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
@@ -219,6 +224,7 @@ public class InitController {
 
     @FXML
     public void askIfSaveWanted() throws IOException {
+    	System.out.println("ervwet");
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         Stage primaryStage = new Stage();
