@@ -5,11 +5,11 @@
 
 <VBox prefHeight="124.0" prefWidth="405.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.fileController">
   <children>
-    <AnchorPane maxHeight="233.0" maxWidth="356.0" prefHeight="233.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="233.0" maxWidth="415.0" prefHeight="124.0" prefWidth="415.0" style="-fx-background-color: #39383D;" VBox.vgrow="ALWAYS">
          <children>
-            <Label layoutX="73.0" layoutY="44.0" prefHeight="18.0" prefWidth="350.0" text="Your work is saved. Do you really want to open a new file? It will close this window."  wrapText="true"/>
-            <Button layoutX="73.0" layoutY="70.0" text="Yes" fx:id="yes" onAction="#goBack" />
-            <Button layoutX="103.0" layoutY="70.0" text = "No" fx:id="no" onAction="#goBack" />
+            <Label layoutX="13.0" layoutY="13.0" prefHeight="42.0" prefWidth="379.0" text="Your work is saved. Do you really want to open a new file? It will close this window." textFill="WHITE" wrapText="true" />
+            <Button fx:id="yes" layoutX="296.0" layoutY="79.0" onAction="#goBack" text="Yes" />
+            <Button fx:id="no" layoutX="343.0" layoutY="80.0" onAction="#goBack" text="No" />
          </children>
     </AnchorPane>
   </children>
