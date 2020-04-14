@@ -49,6 +49,7 @@
 	                    <RadioMenuItem fx:id="opt3" onAction="#checkOption" text="O3" toggleGroup="$optimizeRadioGroup" />
 	                    <RadioMenuItem fx:id="opt4" onAction="#checkOption" text="Os" toggleGroup="$optimizeRadioGroup" />
 	                    <RadioMenuItem fx:id="opt5" onAction="#checkOption" text="Ofast" toggleGroup="$optimizeRadioGroup" />
+                         <MenuItem fx:id="disableOpt" mnemonicParsing="false" onAction="#disableOption" text="Deselect Optimizing options" />
                   </items> 
                   </Menu>
                   <Menu fx:id="generateCode" mnemonicParsing="false" text="Generate Code">
@@ -56,6 +57,7 @@
                      		<CheckMenuItem fx:id="gen1" mnemonicParsing="false" onAction="#checkOption" text="Insert comments in assembly code" />
                            <CheckMenuItem fx:id="gen2" mnemonicParsing="false" onAction="#checkOption" text="Enable exception handling" />
                            <CheckMenuItem fx:id="gen3" mnemonicParsing="false" onAction="#checkOption" text="Allocate optimum memory to enum type" />
+                           <MenuItem fx:id="disableGen" mnemonicParsing="false" onAction="#disableOption" text="Deselect Code Generation options" />
                      </items>
                   </Menu>
                   <MenuItem fx:id="changeUserType" mnemonicParsing="false" onAction="#changeUserTypeDialog" text="Change User Type" />
@@ -75,6 +77,7 @@
                            <CheckMenuItem fx:id="dev1" mnemonicParsing="false" onAction="#checkOption" text="Display time statistics" />
                            <CheckMenuItem fx:id="dev2" mnemonicParsing="false" onAction="#checkOption" text="Display installation directory" />
                            <CheckMenuItem fx:id="dev3" mnemonicParsing="false" onAction="#checkOption" text="Store temporary intermediate files" />
+                           <MenuItem fx:id="disableDev" mnemonicParsing="false" onAction="#disableOption" text="Deselect Developer options" />
                    </items>
                     
                 </Menu>

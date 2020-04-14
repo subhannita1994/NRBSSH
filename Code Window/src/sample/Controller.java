@@ -598,6 +598,39 @@ public class Controller implements CommandListener, Terminal{
 			allOptionsUerMap.put("devOptionsMenu", true);
 		}
 	}
+	
+	@FXML
+	public void disableOption(ActionEvent event) {
+		event.consume();
+
+		String id = ((MenuItem)event.getSource()).getId();
+		if(id.equals("disableOpt")) {
+			this.optimizeCode.setVisible(false);	//render the menu invisible
+			this.allOptionsOptimizeCode.setVisible(true);	//render the menu under all options visible for future selection
+			this.selectedOptions.put("opt2",false);	//remove any selected options from run configurations
+			this.selectedOptions.put("opt3",false);
+			this.selectedOptions.put("opt4",false);
+			this.selectedOptions.put("opt5",false);
+			this.selectedOptions.put("opt1",false);
+			allOptionsUerMap.put("optimizeCode", false);	//removing from user configurations
+		}else if(id.equals("disableDev")) {
+			this.devOptionsMenu.setVisible(false);
+			this.allOptionsDevOptions.setVisible(true);
+			this.selectedOptions.put("dev1",false);
+			this.selectedOptions.put("dev2",false);
+			this.selectedOptions.put("dev3",false);
+			allOptionsUerMap.put("devOptionsMenu", false);
+
+		}else if(id.equals("disableGen")) {
+			this.generateCode.setVisible(false);
+			this.allOptionsGenerateCode.setVisible(true);
+			this.selectedOptions.put("gen1",false);
+			this.selectedOptions.put("gen2",false);
+			this.selectedOptions.put("gen3",false);
+			allOptionsUerMap.put("generateCode", false);
+		}
+	}
+	
 	/**
 	 * reset all checks against all options, i.e., configuration will now be run without any additional options until an option is selected
 	 */
