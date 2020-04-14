@@ -1,5 +1,11 @@
 package sample;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.io.*;
 
 //import java.awt.*;
 
@@ -43,27 +48,11 @@ public class InitController {
         oController.devOptionsMenu.setVisible(false);
         oController.generateCode.setVisible(false);
         oController.optimizeCode.setVisible(false);
-        
+        settingUserPreference(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
-        primaryStage.setOnCloseRequest(event1 -> {
-            event1.consume();
-            System.out.println("Close Clicked");
-            Controller con = new Controller();
-
-            try {
-                if (con.isSaved()) {
-                    InitController.getStage().close();
-
-                } else {
-                    askIfSaveWanted();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
@@ -72,6 +61,69 @@ public class InitController {
 
     }
 
+    @FXML
+    private void settingUserPreference( Controller oController) throws IOException {
+    	StringBuilder stringBuffer = new StringBuilder();
+        BufferedReader bufferedReader = null;
+        try {
+
+            bufferedReader = new BufferedReader(new FileReader(new File("userAllOptions.txt")));
+
+            String text;
+            while ((text = bufferedReader.readLine()) != null) {
+            	StringTokenizer st=new StringTokenizer(text,"=",false);
+            	String key=st.nextToken();
+            	String val=st.nextToken();
+            	
+                
+                if(key.equals("generateCode")) {
+                	if(val.equals("true"))
+                	{
+                	oController.allOptionsGenerateCode.setVisible(false);
+        			oController.generateCode.setVisible(true);
+        			oController.allOptionsUerMap.put("generateCode", true);
+                	}
+                	else
+                	{
+                		oController.generateCode.setVisible(false);	
+                	}
+        		}
+                else if(key.equals("devOptionsMenu")) {
+                	if(val.equals("true"))
+                	{
+                	oController.allOptionsDevOptions.setVisible(false);
+        			oController.devOptionsMenu.setVisible(true);
+        			oController.allOptionsUerMap.put("devOptionsMenu", true);
+                	}
+                	else
+                	{
+                		oController.devOptionsMenu.setVisible(false);	
+                	}
+        		}
+                else if(key.equals("optimizeCode")) {
+                	if(val.equals("true"))
+                	{
+                	oController.allOptionsOptimizeCode.setVisible(false);
+        			oController.optimizeCode.setVisible(true);
+        			oController.allOptionsUerMap.put("optimizeCode", true);
+                	}
+                	else
+                	{
+                		oController.optimizeCode.setVisible(false);	
+                	}
+        		}
+            }
+            
+            if(oController.optimizeCode.isVisible() && oController.devOptionsMenu.isVisible() && oController.generateCode.isVisible())
+            {
+            	oController.allOptions.setVisible(false);
+            }
+    	
+        }
+        
+        catch(Exception e) {}
+  }
+    
     @FXML
     public void setTitle(String newLabel)
     {
@@ -100,27 +152,11 @@ public class InitController {
         oController.devOptionsMenu.setVisible(false);
         oController.allOptionsGenerateCode.setVisible(false);
         oController.allOptionsOptimizeCode.setVisible(false);
-        
+        settingUserPreference(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
-        primaryStage.setOnCloseRequest(event1 -> {
-            event1.consume();
-            System.out.println("Close Clicked");
-            Controller con = new Controller();
-
-            try {
-                if (con.isSaved()) {
-                    InitController.getStage().close();
-
-                } else {
-                    askIfSaveWanted();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();
@@ -150,22 +186,7 @@ public class InitController {
         stage.close();
         
         primaryStage.setTitle("FileName.cpp - Smart Gcc");
-        primaryStage.setOnCloseRequest(event1 -> {
-            event1.consume();
-            System.out.println("Close Clicked");
-            Controller con = new Controller();
 
-            try {
-                if (con.isSaved()) {
-                    InitController.getStage().close();
-
-                } else {
-                    askIfSaveWanted();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
         primaryStage.setScene(new Scene(root, 640, 300));
         primaryStage.setMaximized(true);
         primaryStage.show();

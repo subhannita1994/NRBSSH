@@ -60,13 +60,13 @@ public class Controller implements CommandListener, Terminal{
     private int userInputStart = 0;
     private static HashMap<String, String> options = new HashMap<String, String>();
     private static HashMap<String, Boolean> selectedOptions = new HashMap<String, Boolean>();
-    
+    public static HashMap<String, Boolean> allOptionsUerMap = new HashMap<String, Boolean>();
 
     /**
      *
      */
     public Controller() {
-    	options.put("dev1", "-dumpmachine");// g++ -ftime-report out.cpp -o -
+    	options.put("dev1", "-ftime-report");// g++ -ftime-report out.cpp -o -
     	options.put("dev2","-print-search-dirs");//g++ -print-search-dirs out.cpp -o -
     	options.put("dev3", "-save-temps"); //g++ -save-temps out.cpp -o -
 //        options.put("dev1", "-fno-dollars-in-identifiers"); 
@@ -84,23 +84,6 @@ public class Controller implements CommandListener, Terminal{
         options.put("gen2", "-fexceptions"); //g++ -S  out.cpp -fexceptions -o -
         options.put("gen3", "-fshort-enums"); //g++ -S  out.cpp -fshort-enums -o -
 
-        InitController.getStage().setOnCloseRequest(event1 -> {
-            event1.consume();
-            System.out.println("Close Clicked");
-
-            try {
-                if (isSaved()) {
-                    InitController.getStage().close();
-
-                } else {
-                    //askIfSaveWanted();
-                    System.out.println(";jhgsss");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        
         cmd = new Command(this);
       
     }
@@ -265,52 +248,7 @@ public class Controller implements CommandListener, Terminal{
     }
 
     private void _runCode(String Code,  String attachedCode) throws IOException {
-//        String Location= _saveTempFile(Code);
-//        Runtime runtime = Runtime.getRuntime();
-//        ProcessBuilder builder = new ProcessBuilder();
-//        //builder.command("cmd.exe", "/c", a);
-//        //builder.command("cmd.exe", "/c", "cd"+Location+" && dir & java out.java"); // executing commands of gcc
-//        final String os = System.getProperty("os.name").toLowerCase();
-//        if(os.indexOf("win") >= 0)
-//        	builder.command("cmd.exe", "/c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp & .\\program"); // executing commands of gcc
-//        else if(os.indexOf("mac") >= 0)	//adding compatibility for mac os
-//        	builder.command("bash", "-c", "cd \""+Location+"\"&& g++ "+attachedCode+" -o program out.cpp && ./program");
-//        builder.redirectErrorStream(true);
-//        try {
-//            Process p = builder.start();
-//            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//            String line;
-//            String res = "";
-//            while (true) {
-//                line = r.readLine();
-//                if (line == null) {
-//                    break;
-//                }
-//                System.out.println(line);
-//                res= res+"\n"+ line;
-//
-//            }
-//            if(res.contains(" error"))
-//            {
-//                ipText.setStyle("-fx-text-inner-color: red;");
-//                ipText.setText(res);
-//            }
-//            else if(res.contains(" warning")) {
-//            	ipText.setStyle("-fx-text-inner-color: pink;");
-//                ipText.setText(res);
-//            }
-//            else{
-//                ipText.setStyle("-fx-text-inner-color: green;");
-//                ipText.setText(res);
-//            }
-//
-//
-//        } catch (Exception e1) {
-//        	
-//            e1.printStackTrace();
-//        }
-    	
+
     	if (!cmd.isRunning()) {
 			cmd.execute(attachedCode);
 		} else {
@@ -649,12 +587,15 @@ public class Controller implements CommandListener, Terminal{
 		if(id.equals("allOptionsGenerateCode")) {
 			allOptionsGenerateCode.setVisible(false);
 			generateCode.setVisible(true);
+			allOptionsUerMap.put("generateCode", true);
 		}else if(id.equals("allOptionsOptimizeCode")) {
 			allOptionsOptimizeCode.setVisible(false);
 			optimizeCode.setVisible(true);
+			allOptionsUerMap.put("optimizeCode", true);
 		}else if(id.equals("allOptionsDevOptions")) {
 			allOptionsDevOptions.setVisible(false);
 			devOptionsMenu.setVisible(true);
+			allOptionsUerMap.put("devOptionsMenu", true);
 		}
 	}
 	/**
