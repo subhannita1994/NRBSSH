@@ -1,10 +1,8 @@
 package sample;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,45 +66,34 @@ public class changeUserTypeController {
         BufferedReader bufferedReader = null;
         try {
 
-            bufferedReader = new BufferedReader(new FileReader(new File("userAllOptions.txt")));
-
-            String text;
-            while ((text = bufferedReader.readLine()) != null) {
-            	StringTokenizer st=new StringTokenizer(text,"=",false);
-            	String key=st.nextToken();
-            	String val=st.nextToken();
-            	
-                
-                if(key.equals("generateCode")) {
-                	if(val.equals("true"))
+        	for(Entry<String, Boolean> m :oController.allOptionsUerMap.entrySet()){
+                if(m.getKey().equals("generateCode")) {
+                	if(m.getValue())
                 	{
                 	oController.allOptionsGenerateCode.setVisible(false);
         			oController.generateCode.setVisible(true);
-        			oController.allOptionsUerMap.put("generateCode", true);
                 	}
                 	else
                 	{
                 		oController.generateCode.setVisible(false);	
                 	}
         		}
-                else if(key.equals("devOptionsMenu")) {
-                	if(val.equals("true"))
+                else if(m.getKey().equals("devOptionsMenu")) {
+                	if(m.getValue())
                 	{
                 	oController.allOptionsDevOptions.setVisible(false);
         			oController.devOptionsMenu.setVisible(true);
-        			oController.allOptionsUerMap.put("devOptionsMenu", true);
                 	}
                 	else
                 	{
                 		oController.devOptionsMenu.setVisible(false);	
                 	}
         		}
-                else if(key.equals("optimizeCode")) {
-                	if(val.equals("true"))
+                else if(m.getKey().equals("optimizeCode")) {
+                	if(m.getValue())
                 	{
                 	oController.allOptionsOptimizeCode.setVisible(false);
         			oController.optimizeCode.setVisible(true);
-        			oController.allOptionsUerMap.put("optimizeCode", true);
                 	}
                 	else
                 	{
