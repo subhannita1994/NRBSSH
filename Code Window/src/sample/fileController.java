@@ -2,6 +2,7 @@ package sample;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -27,6 +28,10 @@ public class fileController {
 		String id = ((Button)event.getSource()).getId();
 		if(id.equals("yes")) {
 			oController.openNewFile();
+		}else if(id.equals("yesExit")) {
+			Platform.exit();
+		}else if(id.equals("noGoback")) {
+			
 		}
 		
 	}

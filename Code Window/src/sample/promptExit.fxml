@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="124.0" prefWidth="405.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.fileController">
+  <children>
+    <AnchorPane maxHeight="233.0" maxWidth="411.0" prefHeight="124.0" prefWidth="411.0" style="-fx-background-color: #39383D;" VBox.vgrow="ALWAYS">
+         <children>
+            <Label layoutX="11.0" layoutY="20.0" prefHeight="18.0" prefWidth="350.0" text="Do you really want to quit?" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font size="21.0" />
+               </font></Label>
+            <Button fx:id="yesExit" layoutX="320.0" layoutY="83.0" onAction="#goBack" text="Yes" />
+            <Button fx:id="noGoback" layoutX="363.0" layoutY="83.0" onAction="#goBack" text="No" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

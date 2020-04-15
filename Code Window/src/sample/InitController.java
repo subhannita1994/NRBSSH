@@ -6,15 +6,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 //import java.awt.*;
 
@@ -27,6 +34,42 @@ public class InitController {
 
     private static Stage stage=new Stage();	//has to remain static to let changeUserType work
     public static Stage getStage() { return stage; }
+    public Controller oController;
+
+    @FXML
+    public void initialize() {
+    	stage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, e->{
+            e.consume();
+            
+            try {
+				oController._saveTempFile(oController.opText.getText());
+				final Stage dialog = new Stage();
+	            dialog.initModality(Modality.APPLICATION_MODAL);
+	            Stage primaryStage=new Stage();
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("promptExit.fxml"));
+	            Parent root = null;
+				try {
+					root = loader.load();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	            primaryStage.setTitle("Exit");
+	            primaryStage.setResizable(false);
+	            dialog.initOwner(primaryStage);
+	            dialog.setTitle("Exit");
+	            dialog.setResizable(false);
+	            Scene dialogScene = new Scene(root, 405, 124);
+	            dialog.setScene(dialogScene);
+	            dialog.show();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}	//auto-save
+            
+            
+        });
+    }
     
 /**
  * loads novice screen with default options for novice
@@ -41,7 +84,7 @@ public class InitController {
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
-        Controller oController= (Controller)loader.getController();
+        this.oController= (Controller)loader.getController();
         Stage primaryStage= getStage();
         
         oController.makeAllVisible();
@@ -50,7 +93,6 @@ public class InitController {
         oController.optimizeCode.setVisible(false);
         settingUserPreference(oController);
         oController.setUserMode("User mode: Novice");
-        Main.setController(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
@@ -147,7 +189,7 @@ public class InitController {
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
-        Controller oController= (Controller)loader.getController();
+        this.oController= (Controller)loader.getController();
         Stage primaryStage= getStage();
         
         oController.makeAllVisible();
@@ -156,7 +198,6 @@ public class InitController {
         oController.allOptionsOptimizeCode.setVisible(false);
         oController.setUserMode("User mode: Typical");
         settingUserPreference(oController);
-        Main.setController(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
@@ -180,13 +221,12 @@ public class InitController {
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = loader.load();
-        Controller oController= (Controller)loader.getController();
+        this.oController= (Controller)loader.getController();
         Stage primaryStage= getStage();
         
         oController.makeAllVisible();
         oController.allOptions.setVisible(false);
         oController.setUserMode("User mode: Expert");
-        Main.setController(oController);
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
         
@@ -200,45 +240,45 @@ public class InitController {
 
     }
 
-    @FXML
-    Button saveyes;
-    @FXML
-    public void clickedonSave(ActionEvent event) throws IOException {
-        Controller con = new Controller();
-        con.saveAsFile();
-        InitController.getStage().close();
-        Stage stage = (Stage) saveno.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    Button saveno;
-
-    @FXML
-    public void clickedonNoSave(ActionEvent event) throws IOException {
-        InitController.getStage().close();
-        Stage stage = (Stage) saveno.getScene().getWindow();
-        stage.close();
-    }
-
-
-    @FXML
-    public void askIfSaveWanted() throws IOException {
-    	System.out.println("ervwet");
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("CloseDialogue.fxml"));
-        primaryStage.setTitle("Debug");
-        primaryStage.setResizable(false);
-        dialog.initOwner(primaryStage);
-        dialog.setTitle("Debug");
-        dialog.setResizable(false);
-        Scene dialogScene = new Scene(root, 405, 124);
-        dialog.setScene(dialogScene);
-        dialog.show();
-
-    }
+//    @FXML
+//    Button saveyes;
+//    @FXML
+//    public void clickedonSave(ActionEvent event) throws IOException {
+//        Controller con = new Controller();
+//        con.saveAsFile();
+//        InitController.getStage().close();
+//        Stage stage = (Stage) saveno.getScene().getWindow();
+//        stage.close();
+//    }
+//
+//    @FXML
+//    Button saveno;
+//
+//    @FXML
+//    public void clickedonNoSave(ActionEvent event) throws IOException {
+//        InitController.getStage().close();
+//        Stage stage = (Stage) saveno.getScene().getWindow();
+//        stage.close();
+//    }
+//
+//
+//    @FXML
+//    public void askIfSaveWanted() throws IOException {
+//    	System.out.println("ervwet");
+//        final Stage dialog = new Stage();
+//        dialog.initModality(Modality.APPLICATION_MODAL);
+//        Stage primaryStage = new Stage();
+//        Parent root = FXMLLoader.load(getClass().getResource("CloseDialogue.fxml"));
+//        primaryStage.setTitle("Debug");
+//        primaryStage.setResizable(false);
+//        dialog.initOwner(primaryStage);
+//        dialog.setTitle("Debug");
+//        dialog.setResizable(false);
+//        Scene dialogScene = new Scene(root, 405, 124);
+//        dialog.setScene(dialogScene);
+//        dialog.show();
+//
+//    }
 
 	public static void close() {
 		// TODO Auto-generated method stub

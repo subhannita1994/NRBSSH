@@ -164,18 +164,24 @@ public class Controller implements CommandListener, Terminal{
 
     @FXML
     public void askIfSaveWanted() throws IOException {
-        final Stage dialog = new Stage();
+    	
+    	System.out.println("launching dialogue if you want to save");
+    	final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("CloseDialogue.fxml"));
-        primaryStage.setTitle("Debug");
+        Stage primaryStage=new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("promptSave.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("Save");
         primaryStage.setResizable(false);
         dialog.initOwner(primaryStage);
-        dialog.setTitle("Debug");
+        fileController oController= (fileController)loader.getController();
+        oController.setGoBack(this);
+        dialog.setTitle("Save");
         dialog.setResizable(false);
-        Scene dialogScene = new Scene(root, 405, 124);
+        Scene dialogScene = new Scene(root, 640, 350);
         dialog.setScene(dialogScene);
         dialog.show();
+        
 
     }
 
@@ -570,7 +576,6 @@ public class Controller implements CommandListener, Terminal{
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         Stage primaryStage=new Stage();
-        //Parent root = FXMLLoader.load(getClass().getResource("changeUserType.fxml"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("changeUserType.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Change User Type Dialog");
@@ -675,7 +680,7 @@ public class Controller implements CommandListener, Terminal{
 	}
 	
 	/**
-	 * probably defunct
+	 * 
 	 * reset all checks against all options, i.e., configuration will now be run without any additional options until an option is selected
 	 */
 	@FXML
